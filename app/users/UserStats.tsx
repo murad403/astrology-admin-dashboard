@@ -1,0 +1,31 @@
+import React from 'react'
+import { HiOutlineUserGroup } from 'react-icons/hi'
+
+const UserStats = () => {
+    return (
+        <div className='flex justify-between items-center gap-5 *:border *:border-border-color'>
+            <div className='rounded-xl p-5 bg-common w-1/2 space-y-8'>
+                <div className='text-header font-semibold text-[20px] flex gap-28 items-center'>
+                    <h3>Total Users</h3>
+                    <HiOutlineUserGroup />
+                </div>
+                <div>
+                <h2 className='font-medium text-3xl text-header'>5,250</h2>
+                    <p className='text-title font-medium text-[16px]'>+12% from last month</p>
+                </div>
+            </div>
+            <div className='rounded-xl p-5 bg-common w-1/2 space-y-8'>
+                <div className='text-header font-semibold text-[20px] flex gap-28 items-center'>
+                    <h3>Active User</h3>
+                    <HiOutlineUserGroup />
+                </div>
+                <div>
+                <h2 className='font-medium text-3xl text-header'>250</h2>
+                    <p className='text-title font-medium text-[16px]'>+12% from last month</p>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default UserStats
