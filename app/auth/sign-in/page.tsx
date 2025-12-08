@@ -1,11 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import FormHandler from "@/app/componensts/form/FormHandler";
 import FormInput from "@/app/componensts/form/FormInput";
+import { saveToken } from "@/app/utils/auth";
+import { useSignInUserMutation } from "@/redux/features/auth/authApi";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LuEye, LuEyeOff } from "react-icons/lu";
+import { toast } from "react-toastify";
 
 type TSignIn = {
     email: string;
@@ -15,10 +19,22 @@ type TSignIn = {
 const SignIn = () => {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState<boolean>(false);
-    const onsubmit = (data: TSignIn) => {
-        console.log(data);
-        router.push('/');
+    const[signInUser, {isLoading}] = useSignInUserMutation();
+
+
+    const onsubmit = async(data: TSignIn) => {
+        try {
+            const result = await signInUser(data).unwrap();
+            await saveToken(result.tokens.access, result.tokens.access);
+            router.push('/');
+            toast(result?.message);
+        } catch (error: any) {
+            // console.log(error.data.non_field_errors[0]);
+            toast(error?.data?.non_field_errors?.[0]);
+        }
+        
     }
+
 
     const emailValidation = {
         required: 'Email is required',
@@ -27,7 +43,6 @@ const SignIn = () => {
             message: 'Please enter a valid email address'
         }
     }
-
     const passwordValidation = {
         required: 'Password is required',
     }   
@@ -65,7 +80,11 @@ const SignIn = () => {
                     <div className="flex justify-end items-center text-[#DF2421]">
                         <Link href={"/auth/forget-password"} className="text-sm font-medium">Forget Password?</Link>
                     </div>
-                    <button type="submit" className="bg-main w-full text-header rounded-xl py-3 mt-7 cursor-pointer">Log in</button>
+                    <button type="submit" className="bg-main w-full rounded-xl py-3 mt-7 cursor-pointer">
+                        {
+                            isLoading ? <span className="loading loading-spinner text-header"></span> : <span className="text-header">Log in</span>
+                        }
+                    </button>
                 </FormHandler>
                 </div>
             </div>

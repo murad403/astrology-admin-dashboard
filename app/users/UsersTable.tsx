@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/incompatible-library */
 "use client";
 import { RiDeleteBin6Line } from "react-icons/ri"
 import {
@@ -22,7 +21,8 @@ import { useState } from "react";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import Image from "next/image";
 import profileImage from "../../public/admin.jpg";
-import { Eye } from "lucide-react";
+import { useUserListQuery } from "@/redux/features/user/userApi";
+import { TUser } from "../types/user.types";
 
 const UsersTable = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -30,6 +30,8 @@ const UsersTable = () => {
     const startIndex = (currentPage - 1) * 5;
     const endIndex = startIndex + 5;
     const currentData = [2, 3, 4].slice(startIndex, endIndex);
+    const { data, isLoading } = useUserListQuery(undefined);
+    console.log(data?.users);
 
     const handlePageChange = (page: number) => {
         if (page >= 1 && page <= totalPages) {
@@ -90,109 +92,114 @@ const UsersTable = () => {
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-[#1F2544] text-header">
-                        {/* row 1 */}
-                        <tr>
-                            <td className="flex items-center gap-3">
-                                <Image src={profileImage} alt="user profile" width={48} height={48} className="rounded-full"></Image>
-                                <div>
-                                    <h3 className="font-semibold text-[16px]">Sarah Johson</h3>
-                                    <p className="text-title font-medium text-sm">Sarah@gmail.com</p>
-                                </div>
-                            </td>
-                            <td>12/12/2001</td>
-                            <td>USA</td>
-                            <td>12 am</td>
-                            <td>Dhaka</td>
-                            <td>
-                                <div className="flex gap-3">
+                    <tbody>
+                        {
+                            data?.users.map((user: TUser) =>
+                                <tr className="bg-[#1F2544] text-header" key={user?.id}>
+                                    <td className="flex items-center gap-3">
+                                        <Image src={profileImage} alt="user profile" width={48} height={48} className="rounded-full"></Image>
+                                        <div>
+                                            <h3 className="font-semibold text-[16px]">{user?.name}</h3>
+                                            <p className="text-title font-medium text-sm">{user?.email}</p>
+                                        </div>
+                                    </td>
+                                    <td>12/12/2001</td>
+                                    <td>USA</td>
+                                    <td>12 am</td>
+                                    <td>Dhaka</td>
+                                    <td>
+                                        <div className="flex gap-3">
 
-                                    {/* edit user modal */}
-                                    <div>
-                                        <Dialog>
-                                            <form>
-                                                <DialogTrigger asChild>
-                                                    <button className="cursor-pointer">
-                                                        <MdOutlineRemoveRedEye size={20} />
-                                                    </button>
-                                                </DialogTrigger>
-
-                                                <DialogContent className="w-[540px] p-7 space-y-7">
-                                                    <DialogHeader>
-                                                        <DialogTitle className="text-2xl">
-                                                            View User - Sadiqul vai
-                                                        </DialogTitle>
-                                                    </DialogHeader>
-
-                                                    <div className="space-y-4">
-                                                        <div className="flex justify-between">
-                                                            <h3 className="text-xl w-[40%]">Name:</h3>
-                                                            <p className="w-[60%] border border-title rounded-xl p-3">Sadiqul vai</p>
-                                                        </div>
-                                                        <div className="flex justify-between">
-                                                            <h3 className="text-xl w-[40%]">Date of Birth:</h3>
-                                                            <p className="w-[60%] border border-title rounded-xl p-3">30/08/2025</p>
-                                                        </div>
-                                                        <div className="flex justify-between">
-                                                            <h3 className="text-xl w-[40%]">Birth Country:</h3>
-                                                            <p className="w-[60%] border border-title rounded-xl p-3">USA</p>
-                                                        </div>
-                                                        <div className="flex justify-between">
-                                                            <h3 className="text-xl w-[40%]">Birth City:</h3>
-                                                            <p className="w-[60%] border border-title rounded-xl p-3">Loas Angles</p>
-                                                        </div>
-                                                        <div className="flex justify-between">
-                                                            <h3 className="text-xl w-[40%]">Time of Birth:</h3>
-                                                            <p className="w-[60%] border border-title rounded-xl p-3">12 pm</p>
-                                                        </div>
-                                                    </div>
-
-                                                    <DialogFooter className="w-full space-x-7">
-                                                        <DialogClose className="w-full cursor-pointer h-[52px] bg-main text-white font-semibold rounded-xl" asChild>
-                                                            <button>Okay</button>
-                                                        </DialogClose>
-                                                    </DialogFooter>
-                                                </DialogContent>
-                                            </form>
-                                        </Dialog>
-                                    </div>
-
-                                    {/* remove user button modal */}
-                                    <div>
-                                        <Dialog>
-                                            <form>
-                                                <DialogTrigger asChild>
-                                                    <button className="text-red-500 cursor-pointer">
-                                                        <RiDeleteBin6Line size={18} />
-                                                    </button>
-                                                </DialogTrigger>
-
-                                                <DialogContent className="h-[212px] w-[540px] space-y-5 p-7">
-                                                    <DialogHeader>
-                                                        <DialogTitle className="text-2xl text-center">
-                                                            Are you sure you want to Remove this <br /> user?
-                                                        </DialogTitle>
-                                                    </DialogHeader>
-                                                    <DialogFooter className="w-full space-x-7">
-                                                        <DialogClose className="w-1/2 h-11 border border-slate-500 rounded-xl cursor-pointer" asChild>
-                                                            <button>Cancel</button>
-                                                        </DialogClose>
-                                                        <DialogClose asChild>
-                                                            <button onClick={handleRemoveUser} className="w-1/2 h-11 bg-main text-header rounded-xl cursor-pointer" type="submit">
-                                                                Remove
+                                            {/* edit user modal */}
+                                            <div>
+                                                <Dialog>
+                                                    <form>
+                                                        <DialogTrigger asChild>
+                                                            <button className="cursor-pointer">
+                                                                <MdOutlineRemoveRedEye size={20} />
                                                             </button>
-                                                        </DialogClose>
-                                                    </DialogFooter>
-                                                </DialogContent>
-                                            </form>
-                                        </Dialog>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
+                                                        </DialogTrigger>
+
+                                                        <DialogContent className="w-[540px] p-7 space-y-7">
+                                                            <DialogHeader>
+                                                                <DialogTitle className="text-2xl">
+                                                                    View User - Sadiqul vai
+                                                                </DialogTitle>
+                                                            </DialogHeader>
+
+                                                            <div className="space-y-4">
+                                                                <div className="flex justify-between">
+                                                                    <h3 className="text-xl w-[40%]">Name:</h3>
+                                                                    <p className="w-[60%] border border-title rounded-xl p-3">Sadiqul vai</p>
+                                                                </div>
+                                                                <div className="flex justify-between">
+                                                                    <h3 className="text-xl w-[40%]">Date of Birth:</h3>
+                                                                    <p className="w-[60%] border border-title rounded-xl p-3">30/08/2025</p>
+                                                                </div>
+                                                                <div className="flex justify-between">
+                                                                    <h3 className="text-xl w-[40%]">Birth Country:</h3>
+                                                                    <p className="w-[60%] border border-title rounded-xl p-3">USA</p>
+                                                                </div>
+                                                                <div className="flex justify-between">
+                                                                    <h3 className="text-xl w-[40%]">Birth City:</h3>
+                                                                    <p className="w-[60%] border border-title rounded-xl p-3">Loas Angles</p>
+                                                                </div>
+                                                                <div className="flex justify-between">
+                                                                    <h3 className="text-xl w-[40%]">Time of Birth:</h3>
+                                                                    <p className="w-[60%] border border-title rounded-xl p-3">12 pm</p>
+                                                                </div>
+                                                            </div>
+
+                                                            <DialogFooter className="w-full space-x-7">
+                                                                <DialogClose className="w-full cursor-pointer h-[52px] bg-main text-white font-semibold rounded-xl" asChild>
+                                                                    <button>Okay</button>
+                                                                </DialogClose>
+                                                            </DialogFooter>
+                                                        </DialogContent>
+                                                    </form>
+                                                </Dialog>
+                                            </div>
+
+                                            {/* remove user button modal */}
+                                            <div>
+                                                <Dialog>
+                                                    <form>
+                                                        <DialogTrigger asChild>
+                                                            <button className="text-red-500 cursor-pointer">
+                                                                <RiDeleteBin6Line size={18} />
+                                                            </button>
+                                                        </DialogTrigger>
+
+                                                        <DialogContent className="h-[212px] w-[540px] space-y-5 p-7">
+                                                            <DialogHeader>
+                                                                <DialogTitle className="text-2xl text-center">
+                                                                    Are you sure you want to Remove this <br /> user?
+                                                                </DialogTitle>
+                                                            </DialogHeader>
+                                                            <DialogFooter className="w-full space-x-7">
+                                                                <DialogClose className="w-1/2 h-11 border border-slate-500 rounded-xl cursor-pointer" asChild>
+                                                                    <button>Cancel</button>
+                                                                </DialogClose>
+                                                                <DialogClose asChild>
+                                                                    <button onClick={handleRemoveUser} className="w-1/2 h-11 bg-main text-header rounded-xl cursor-pointer" type="submit">
+                                                                        Remove
+                                                                    </button>
+                                                                </DialogClose>
+                                                            </DialogFooter>
+                                                        </DialogContent>
+                                                    </form>
+                                                </Dialog>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )
+                        }
                     </tbody>
                 </table>
             </div>
+
+
             <div className="flex justify-center mt-6">
                 <Pagination>
                     <PaginationContent className="flex justify-between w-full">

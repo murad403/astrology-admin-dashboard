@@ -1,19 +1,19 @@
 import { createApi, DefinitionType, fetchBaseQuery, type BaseQueryApi, type BaseQueryFn, type FetchArgs } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "../store";
 import axios from "axios";
+import { getCurrentUser } from "@/app/utils/auth";
 
 // base query-----------------------------------------------------------------------------------------------
-// const baseQuery = fetchBaseQuery({
-//     baseUrl: "your base url",
-//     credentials: "include",
-//     prepareHeaders: (headers, { getState }) => {
-//         const token = (getState() as RootState).auth.accessToken;
-//         if (token) {
-//             headers.set('authorization', `Bearer ${token}`);
-//         }
-//         return headers;
-//     }
-// })
+const baseQuery = fetchBaseQuery({
+    baseUrl: "http://10.10.12.28:8001/api",
+    prepareHeaders: async(headers, { getState }) => {
+        const {access} = await getCurrentUser();
+        if (access) {
+            headers.set('Authorization', `Bearer ${access}`);
+        }
+        return headers;
+    }
+})
 
 
 // custome base query------------------------------------------------------------------------------- 
@@ -36,24 +36,23 @@ import axios from "axios";
 //     return result;
 // }
 
-
+// const baseQuery = fetchBaseQuery({
+//     baseUrl: "your base url",
+//     credentials: "include",
+//     prepareHeaders: (headers, { getState }) => {
+//         const token = (getState() as RootState).auth.accessToken;
+//         if (token) {
+//             headers.set('authorization', `Bearer ${token}`);
+//         }
+//         return headers;
+//     }
+// })
 
 const baseApi = createApi({
     reducerPath: "baseApi",
-    baseQuery: fetchBaseQuery({baseUrl: ""}),
-    tagTypes: ["User"],
-    endpoints: () => ({
-        // addUser: builder.mutation({
-        //     query: (data) =>{
-        //         return {
-        //             url: "/user",
-        //             method: "POST",
-        //             body: data
-        //         }
-        //     },
-        //     invalidatesTags: ["User"]
-        // })
-    })
+    baseQuery: baseQuery,
+    tagTypes: ["auth"],
+    endpoints: () => ({})
 })
 
 

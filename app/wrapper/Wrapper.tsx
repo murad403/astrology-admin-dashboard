@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import AdminHeader from '../componensts/shared/AdminHeader';
 import { Provider } from 'react-redux';
 import store from '@/redux/store';
+import { ToastContainer } from 'react-toastify';
 
 type TProps = {
   children: React.ReactNode
@@ -31,6 +32,7 @@ const Wrapper = ({ children }: TProps) => {
           </div>
           {children}
         </div>
+        <ToastContainer autoClose={2000}/>
       </SidebarProvider>
     </Provider>
   )

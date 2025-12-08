@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import {
   Sidebar,
@@ -14,18 +15,27 @@ import {
 import Image from "next/image"
 import logo from '../../../public/logo.png'
 import adminSidebarItems from "@/app/libs/AdminSidebar"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { LogOut } from "lucide-react"
 import Link from "next/link"
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { CiCircleQuestion } from "react-icons/ci"
+import { toast } from "react-toastify"
+import { removeToken } from "@/app/utils/auth"
 
 const AdminSidebar = () => {
   const pathName = usePathname();
+  const router = useRouter();
   // console.log(pathName);
 
-  const handleLogout = () => {
-    console.log("Admin logout successfully");
+  const handleLogout = async () => {
+    try {
+      await removeToken();
+      router.push('/auth/sign-in');
+      toast("Logout successfully");
+    } catch (error: any) {
+      toast("Please try again");
+    }
   }
 
   return (
@@ -59,7 +69,7 @@ const AdminSidebar = () => {
         <Dialog>
           <form>
             <DialogTrigger asChild>
-              <button onClick={handleLogout} className="flex items-center gap-3 rounded-md px-4 w-full font-medium text-[18px] bg-[#1F2544] hover:bg-main transition-all duration-300 cursor-pointer py-2">
+              <button className="flex items-center gap-3 rounded-md px-4 w-full font-medium text-[18px] bg-[#1F2544] hover:bg-main transition-all duration-300 cursor-pointer py-2">
                 <LogOut className="text-[#E33629]" size={18} />
                 <span className="text-white">Logout</span>
               </button>

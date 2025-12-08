@@ -1,7 +1,11 @@
+"use client";
 import Image from "next/image";
 import admin from "../../../public/admin.jpg";
+import { useProfileQuery } from "@/redux/features/auth/authApi";
 
 const AdminHeader = () => {
+  const {data, isLoading} = useProfileQuery(undefined);
+  // console.log(data);
   return (
     <div className='bg-common p-5 rounded-xl flex justify-between items-center border border-border-color-color'>
       <div>

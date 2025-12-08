@@ -2,8 +2,7 @@ import AreaChart from './componensts/dashboard/AreaChart'
 import { ChartGenerate } from './componensts/dashboard/ChartGenerate'
 import UsersTable from './users/UsersTable'
 
-const page = () => {
-
+const page = async () => {
   return (
     <div>
       <div className='text-header space-y-5 flex gap-5'>
