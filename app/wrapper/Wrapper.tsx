@@ -4,6 +4,8 @@ import AdminSidebar from '../componensts/shared/AdminSidebar'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { usePathname } from 'next/navigation';
 import AdminHeader from '../componensts/shared/AdminHeader';
+import { Provider } from 'react-redux';
+import store from '@/redux/store';
 
 type TProps = {
   children: React.ReactNode
@@ -14,21 +16,23 @@ const Wrapper = ({ children }: TProps) => {
   const isShowSidebar = pathName?.includes('/auth');
   // console.log(isShowSidebar);
   return (
-    <SidebarProvider className={`flex gap-10 ${isShowSidebar ? "items-center" : "items-start"}`}>
-      <div>
-        {
-          isShowSidebar ? null : <AdminSidebar></AdminSidebar>
-        }
-      </div>
-      <div className='p-8 w-full space-y-5'>
+    <Provider store={store}>
+      <SidebarProvider className={`flex gap-10 ${isShowSidebar ? "items-center" : "items-start"}`}>
         <div>
           {
-            isShowSidebar ? null : <AdminHeader></AdminHeader>
+            isShowSidebar ? null : <AdminSidebar></AdminSidebar>
           }
         </div>
-        {children}
-      </div>
-    </SidebarProvider>
+        <div className='p-8 w-full space-y-5'>
+          <div>
+            {
+              isShowSidebar ? null : <AdminHeader></AdminHeader>
+            }
+          </div>
+          {children}
+        </div>
+      </SidebarProvider>
+    </Provider>
   )
 }
 
