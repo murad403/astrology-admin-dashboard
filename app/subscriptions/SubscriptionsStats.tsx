@@ -7,7 +7,7 @@ const SubscriptionsStats = () => {
     return (
         <div className='flex justify-between items-center gap-5 *:border *:border-border-color'>
             <div className='rounded-xl p-5 bg-common w-1/3 space-y-8'>
-                <div className='text-header font-semibold text-[20px] flex gap-24 items-center'>
+                <div className='text-header font-semibold text-[20px] flex justify-between items-center'>
                     <h3>Total Subscriber</h3>
                     <HiOutlineUserGroup />
                 </div>
@@ -17,7 +17,7 @@ const SubscriptionsStats = () => {
                 </div>
             </div>
             <div className='rounded-xl p-5 bg-common w-1/3 space-y-8'>
-                <div className='text-header font-semibold text-[20px] flex gap-24 items-center'>
+                <div className='text-header font-semibold text-[20px] flex justify-between items-center'>
                     <h3>Active Subscriber</h3>
                     <LuEye />
                 </div>
@@ -27,7 +27,7 @@ const SubscriptionsStats = () => {
                 </div>
             </div>
             <div className='rounded-xl p-5 bg-common w-1/3 space-y-8'>
-                <div className='text-header font-semibold text-[20px] flex gap-24 items-center'>
+                <div className='text-header font-semibold text-[20px] flex justify-between items-center'>
                     <h3>Total Earning</h3>
                     <TfiMoney />
                 </div>

@@ -3,6 +3,7 @@ import BackButton from '@/app/componensts/button/BackButton'
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { termsAndConditions } from '../page'
+import AdminHeader from '@/app/componensts/shared/AdminHeader'
 
 type TInput = {
     termsAndConditions: string;
@@ -17,7 +18,8 @@ const EditTermsConditions = () => {
         console.log(data);
     }
     return (
-        <div>
+        <div className='space-y-5'>
+            <AdminHeader title='Terms & Conditions' description='Update terms & conditions'></AdminHeader>
             <div>
                 <BackButton text='Edit Terms & Conditions'></BackButton>
             </div>

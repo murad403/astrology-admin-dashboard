@@ -31,7 +31,7 @@ const UsersTable = () => {
     const endIndex = startIndex + 5;
     const currentData = [2, 3, 4].slice(startIndex, endIndex);
     const { data, isLoading } = useUserListQuery(undefined);
-    console.log(data?.users);
+    // console.log(data);
 
     const handlePageChange = (page: number) => {
         if (page >= 1 && page <= totalPages) {

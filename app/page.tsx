@@ -1,11 +1,13 @@
 import AreaChart from './componensts/dashboard/AreaChart'
 import { ChartGenerate } from './componensts/dashboard/ChartGenerate'
+import AdminHeader from './componensts/shared/AdminHeader'
 import UsersTable from './users/UsersTable'
 
 const page = async () => {
   return (
-    <div>
-      <div className='text-header space-y-5 flex gap-5'>
+    <div className='space-y-5'>
+      <AdminHeader title='Admin Dashboard' description='Manage the entire astrology platform with full control and clarity.'></AdminHeader>
+      <div className='text-header flex gap-5'>
         <div className='w-2/3'>
           <AreaChart></AreaChart>
         </div>

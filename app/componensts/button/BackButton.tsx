@@ -9,7 +9,7 @@ const BackButton = ({ text }: { text: string }) => {
             <button className="cursor-pointer" onClick={() => router.back()}>
                 <FaArrowLeft />
             </button>
-            <h3 className="font-semibold capitalize">{text}</h3>
+            <h3 className="font-semibold capitalize text-2xl">{text}</h3>
         </div>
     )
 }
