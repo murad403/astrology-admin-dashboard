@@ -31,7 +31,7 @@ const UsersTable = () => {
     const endIndex = startIndex + 5;
     const currentData = [2, 3, 4].slice(startIndex, endIndex);
     const { data, isLoading } = useUserListQuery(undefined);
-    // console.log(data);
+    console.log(data?.users?.[0]);
 
     const handlePageChange = (page: number) => {
         if (page >= 1 && page <= totalPages) {
@@ -97,20 +97,19 @@ const UsersTable = () => {
                             data?.users.map((user: TUser) =>
                                 <tr className="bg-[#1F2544] text-header" key={user?.id}>
                                     <td className="flex items-center gap-3">
-                                        <Image src={profileImage} alt="user profile" width={48} height={48} className="rounded-full"></Image>
+                                        <Image src={user?.profile?.profile_picture || profileImage} alt="user profile" width={48} height={48} className="rounded-full"></Image>
                                         <div>
                                             <h3 className="font-semibold text-[16px]">{user?.name}</h3>
                                             <p className="text-title font-medium text-sm">{user?.email}</p>
                                         </div>
                                     </td>
-                                    <td>12/12/2001</td>
-                                    <td>USA</td>
-                                    <td>12 am</td>
-                                    <td>Dhaka</td>
+                                    <td>{user?.profile?.date_of_birth}</td>
+                                    <td>{user?.profile?.birth_country}</td>
+                                    <td>{user?.profile?.time_of_birth}</td>
+                                    <td>{user?.profile?.birth_city}</td>
                                     <td>
                                         <div className="flex gap-3">
-
-                                            {/* edit user modal */}
+                                            {/* view user details modal */}
                                             <div>
                                                 <Dialog>
                                                     <form>
@@ -123,30 +122,30 @@ const UsersTable = () => {
                                                         <DialogContent className="w-[540px] p-7 space-y-7">
                                                             <DialogHeader>
                                                                 <DialogTitle className="text-2xl">
-                                                                    View User - Sadiqul vai
+                                                                    View User - {user?.name}
                                                                 </DialogTitle>
                                                             </DialogHeader>
 
                                                             <div className="space-y-4">
                                                                 <div className="flex justify-between">
                                                                     <h3 className="text-xl w-[40%]">Name:</h3>
-                                                                    <p className="w-[60%] border border-title rounded-xl p-3">Sadiqul vai</p>
+                                                                    <p className="w-[60%] border border-title rounded-xl p-3">{user?.name}</p>
                                                                 </div>
                                                                 <div className="flex justify-between">
                                                                     <h3 className="text-xl w-[40%]">Date of Birth:</h3>
-                                                                    <p className="w-[60%] border border-title rounded-xl p-3">30/08/2025</p>
+                                                                    <p className="w-[60%] border border-title rounded-xl p-3">{user?.profile?.date_of_birth}</p>
                                                                 </div>
                                                                 <div className="flex justify-between">
                                                                     <h3 className="text-xl w-[40%]">Birth Country:</h3>
-                                                                    <p className="w-[60%] border border-title rounded-xl p-3">USA</p>
+                                                                    <p className="w-[60%] border border-title rounded-xl p-3">{user?.profile?.birth_country}</p>
                                                                 </div>
                                                                 <div className="flex justify-between">
                                                                     <h3 className="text-xl w-[40%]">Birth City:</h3>
-                                                                    <p className="w-[60%] border border-title rounded-xl p-3">Loas Angles</p>
+                                                                    <p className="w-[60%] border border-title rounded-xl p-3">{user?.profile?.birth_city}</p>
                                                                 </div>
                                                                 <div className="flex justify-between">
                                                                     <h3 className="text-xl w-[40%]">Time of Birth:</h3>
-                                                                    <p className="w-[60%] border border-title rounded-xl p-3">12 pm</p>
+                                                                    <p className="w-[60%] border border-title rounded-xl p-3">{user?.profile?.time_of_birth}</p>
                                                                 </div>
                                                             </div>
 

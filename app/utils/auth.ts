@@ -1,7 +1,6 @@
 "use server";
 import { cookies } from "next/headers"
 
-
 export const saveToken = async(access: string, refresh: string): Promise<void> =>{
    (await cookies()).set("access", access);
    (await cookies()).set("refresh", refresh);
