@@ -20,7 +20,7 @@ import {
 import { useState } from "react";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import Image from "next/image";
-import profileImage from "../../public/admin.jpg";
+import profileImage from "@/public/admin.png";
 import { useUserListQuery } from "@/redux/features/user/userApi";
 import { TUser } from "../types/user.types";
 
@@ -31,7 +31,7 @@ const UsersTable = () => {
     const endIndex = startIndex + 5;
     const currentData = [2, 3, 4].slice(startIndex, endIndex);
     const { data, isLoading } = useUserListQuery(undefined);
-    console.log(data?.users?.[0]);
+    // console.log(data?.users?.[0]);
 
     const handlePageChange = (page: number) => {
         if (page >= 1 && page <= totalPages) {

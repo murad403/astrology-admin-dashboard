@@ -1,17 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import Image from 'next/image'
 import logo from '../../../public/logo.png'
 import BackButton from '@/app/componensts/button/BackButton'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useResendOtpMutation, useVerifyOtpMutation } from '@/redux/features/auth/authApi'
+import { toast } from 'react-toastify'
+import { useAppSelector } from '@/redux/hooks'
+import { RootState } from '@/redux/store'
+import { useDispatch } from 'react-redux'
+import { setUser } from '@/redux/features/auth/authSlice'
 
 const VerifyOtp = () => {
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
     const router = useRouter();
     const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
     const [otpError, setOtpError] = useState<string>("");
-
     const [timeLeft, setTimeLeft] = useState<number>(30);
+    const [verifyOtp, { isLoading }] = useVerifyOtpMutation();
+    const { user } = useAppSelector((state: RootState) => state.auth);
+    const dispatch = useDispatch();
+    const [resendOtp, {isLoading: resendOtpLoading}] = useResendOtpMutation();
+    // console.log(user)
 
     useEffect(() => {
         if (timeLeft <= 0) return;
@@ -20,7 +31,6 @@ const VerifyOtp = () => {
         }, 1000);
         return () => clearInterval(timer);
     }, [timeLeft]);
-    // console.log(timeLeft)
 
     const handleChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -44,7 +54,7 @@ const VerifyOtp = () => {
         }
     };
 
-    const onsubmit = (e: React.FormEvent) => {
+    const onsubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const originalOtp = otp.join("");
         const emptyIndex = otp.findIndex(digit => digit === "");
@@ -53,13 +63,30 @@ const VerifyOtp = () => {
             inputRefs.current[emptyIndex]?.focus();
             return;
         }
-        console.log("Submitted OTP:", originalOtp);
-        router.push('/auth/change-password')
+        const data = {
+            email: user,
+            otp_code: originalOtp
+        }
+        // console.log(data);
+        try {
+            const result = await verifyOtp(data).unwrap();
+            toast(result?.message);
+            dispatch(setUser(result?.email))
+            router.push("/auth/change-password");
+        } catch (error: any) {
+            toast(error?.details?.otp_code);
+        }
     };
 
-    const handleResendCode = () => {
-        console.log("Resend code clicked");
-        setTimeLeft(30);
+    const handleResendCode = async() => {
+        try {
+            const result = await resendOtp({email: user}).unwrap();
+            toast(result?.message);
+            dispatch(setUser(result?.email));
+            setTimeLeft(30);
+        } catch (error: any) {
+            toast(error?.details?.email);
+        }
     }
 
     return (
@@ -106,7 +133,10 @@ const VerifyOtp = () => {
                                         onClick={handleResendCode}
                                         className='font-medium text-[16px] text-main cursor-pointer'
                                     >
-                                        Resend
+                                        {
+                                            resendOtpLoading ? <p className='text-sm text-main'>sending...</p> : 'Resend'
+                                        }
+                                        
                                     </button>
                             }
 
@@ -115,7 +145,9 @@ const VerifyOtp = () => {
                         <button
                             type="submit"
                             className="bg-main w-full text-white rounded-xl py-4 text-lg font-semibold cursor-pointer">
-                            Confirm
+                            {
+                                isLoading ? <span className="loading loading-spinner text-header"></span> : <span className="text-header">Confirm</span>
+                            }
                         </button>
                     </form>
                 </div>

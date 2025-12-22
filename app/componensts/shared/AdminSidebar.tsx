@@ -22,15 +22,19 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { CiCircleQuestion } from "react-icons/ci"
 import { toast } from "react-toastify"
 import { removeToken } from "@/app/utils/auth"
+import { useAppDispatch } from "@/redux/hooks"
+import { setUser } from "@/redux/features/auth/authSlice"
 
 const AdminSidebar = () => {
   const pathName = usePathname();
   const router = useRouter();
-  // console.log(pathName);
+  const dispatch = useAppDispatch();
+    // console.log(pathName);
 
   const handleLogout = async () => {
     try {
       await removeToken();
+      dispatch(setUser(null));
       router.push('/auth/sign-in');
       toast("Logout successfully");
     } catch (error: any) {

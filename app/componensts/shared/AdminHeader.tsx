@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import admin from "../../../public/admin.jpg";
+import admin from "@/public/admin.png";
 import { useProfileQuery } from "@/redux/features/auth/authApi";
 
 type TProps = {

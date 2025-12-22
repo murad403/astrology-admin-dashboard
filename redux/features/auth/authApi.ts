@@ -20,8 +20,44 @@ const authApi = baseApi.injectEndpoints({
                 }
             },
             providesTags: ["auth"]
-        })
+        }),
+        verifyEmail: builder.mutation({
+            query: (data) =>{
+                return {
+                    url: "/forgot-password/request/",
+                    method: "POST",
+                    body: data
+                }
+            }
+        }),
+        verifyOtp: builder.mutation({
+            query: (data) =>{
+                return {
+                    url: "/forgot-password/verify-otp/",
+                    method: "POST",
+                    body: data
+                }
+            }
+        }),
+        changePassword: builder.mutation({
+            query: (data) =>{
+                return {
+                    url: "/forgot-password/reset-password/",
+                    method: "POST",
+                    body: data
+                }
+            }
+        }),
+        resendOtp: builder.mutation({
+            query: (data) =>{
+                return {
+                    url: "/forgot-password/resend-otp/",
+                    method: "POST",
+                    body: data
+                }
+            }
+        }),
     })
 })
 
-export const {useSignInUserMutation, useProfileQuery} = authApi;
+export const {useSignInUserMutation, useProfileQuery, useVerifyEmailMutation, useVerifyOtpMutation, useChangePasswordMutation, useResendOtpMutation} = authApi;

@@ -10,10 +10,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import image from "../../public/admin.jpg";
+import image from "@/public/admin.png";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
-import { IoIosArrowDown } from "react-icons/io";
 
 type TSubscribers = {
     name: string;
