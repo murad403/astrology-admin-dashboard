@@ -1,7 +1,7 @@
 import AreaChart from './componensts/dashboard/AreaChart'
 import { ChartGenerate } from './componensts/dashboard/ChartGenerate'
+import RecentUsersTable from './componensts/dashboard/RecentUsersTable'
 import AdminHeader from './componensts/shared/AdminHeader'
-import UsersTable from './users/UsersTable'
 
 const page = async () => {
   return (
@@ -16,7 +16,7 @@ const page = async () => {
         </div>
       </div>
       <div>
-        <UsersTable></UsersTable>
+        <RecentUsersTable></RecentUsersTable>
       </div>
     </div>
   )

@@ -1,7 +1,8 @@
 "use client"
+import { useDashboardQuery } from "@/redux/features/dashboard/dashboardApi"
 import { useState, useMemo } from "react"
 
-type FilterType = "years" | "months" | "weeks"
+type FilterType = "year" | "month" | "week"
 
 interface DataPoint {
   label: string
@@ -14,61 +15,30 @@ interface ChartData {
 }
 
 const AreaChart = () => {
-  const [filter, setFilter] = useState<FilterType>("years")
-  // console.log(dashboardData?.earning_overview);
+  const [filter, setFilter] = useState<FilterType>("month");
+  const { data: apiData, isLoading } = useDashboardQuery(filter);
 
-  const chartData: Record<FilterType, ChartData> = useMemo(
-    () => ({
-      years: {
-        points: [
-          { label: "2020", value: 200 },
-          { label: "2021", value: 120 },
-          { label: "2022", value: 85 },
-          { label: "2023", value: 95 },
-          { label: "2024", value: 155 },
-          { label: "2025", value: 110 },
-        ],
-        maxValue: 200,
-      },
-      months: {
-        points: [
-          { label: "Jan", value: 65 },
-          { label: "Feb", value: 155 },
-          { label: "Mar", value: 95 },
-          { label: "Apr", value: 35 },
-          { label: "May", value: 45 },
-          { label: "Jun", value: 65 },
-          { label: "Jul", value: 85 },
-          { label: "Aug", value: 145 },
-          { label: "Sep", value: 165 },
-          { label: "Oct", value: 95 },
-          { label: "Nov", value: 185 },
-          { label: "Dec", value: 135 },
-        ],
-        maxValue: 200,
-      },
-      weeks: {
-        points: [
-          { label: "W1", value: 75 },
-          { label: "W2", value: 120 },
-          { label: "W3", value: 65 },
-          { label: "W4", value: 95 },
-          { label: "W5", value: 145 },
-          { label: "W6", value: 85 },
-          { label: "W7", value: 110 },
-          { label: "W8", value: 155 },
-          { label: "W9", value: 95 },
-          { label: "W10", value: 135 },
-          { label: "W11", value: 175 },
-          { label: "W12", value: 105 },
-        ],
-        maxValue: 200,
-      },
-    }),
-    [],
-  )
+  // API data থেকে chart data generate করা
+  const chartData: ChartData = useMemo(() => {
+    if (!apiData?.earning_overview) {
+      return { points: [], maxValue: 0 };
+    }
 
-  const data = chartData[filter]
+    const { labels, data } = apiData.earning_overview;
+    
+    // Data points তৈরি করা
+    const points: DataPoint[] = labels.map((label: string, index: number) => ({
+      label: label,
+      value: data[index] || 0
+    }));
+
+    // Maximum value বের করা (যদি সব 0 হয় তাহলে 200 default)
+    const maxDataValue = Math.max(...data);
+    const maxValue = maxDataValue > 0 ? Math.ceil(maxDataValue / 50) * 50 : 200;
+
+    return { points, maxValue };
+  }, [apiData]);
+
   const width = 1000
   const height = 250
   const padding = { top: 40, right: 40, bottom: 40, left: 60 }
@@ -77,20 +47,22 @@ const AreaChart = () => {
 
   // Generate smooth curve path
   const generatePath = (): string => {
-    const points = data.points
-    const xStep = chartWidth / (points.length - 1)
+    const points = chartData?.points
+    if (!points || points.length === 0) return "";
+    
+    const xStep = chartWidth / (points?.length - 1)
     let path = ""
 
-    points.forEach((point, index) => {
+    points?.forEach((point, index) => {
       const x = padding.left + index * xStep
-      const y = padding.top + chartHeight - (point.value / data.maxValue) * chartHeight
+      const y = padding.top + chartHeight - (point?.value / chartData?.maxValue) * chartHeight
 
       if (index === 0) {
         path += `M ${x} ${y}`
       } else {
         const prevPoint = points[index - 1]
         const prevX = padding.left + (index - 1) * xStep
-        const prevY = padding.top + chartHeight - (prevPoint.value / data.maxValue) * chartHeight
+        const prevY = padding.top + chartHeight - (prevPoint?.value / chartData?.maxValue) * chartHeight
 
         const controlX1 = prevX + xStep / 3
         const controlX2 = x - xStep / 3
@@ -105,12 +77,29 @@ const AreaChart = () => {
   // Generate fill path (line + bottom close)
   const generateFillPath = (): string => {
     const mainPath = generatePath()
-    const lastPoint = data.points[data.points.length - 1]
-    const lastX = padding.left + (data.points.length - 1) * (chartWidth / (data.points.length - 1))
+    if (!chartData?.points || chartData.points.length === 0) return "";
+    
+    const lastPoint = chartData?.points[chartData?.points.length - 1]
+    const lastX = padding.left + (chartData.points.length - 1) * (chartWidth / (chartData.points.length - 1))
     const lastY = padding.top + chartHeight
     const firstY = padding.top + chartHeight
 
     return `${mainPath} L ${lastX} ${lastY} L ${padding.left} ${firstY} Z`
+  }
+
+  // Grid values generate করা
+  const gridValues = useMemo(() => {
+    const max = chartData.maxValue;
+    const step = max / 4;
+    return [0, step, step * 2, step * 3, max];
+  }, [chartData.maxValue]);
+
+  if (isLoading) {
+    return (
+      <div className="w-full border h-[350px] border-border-color rounded-xl p-5 bg-common flex items-center justify-center">
+        <span className="text-gray-400">Loading...</span>
+      </div>
+    );
   }
 
   return (
@@ -126,9 +115,9 @@ const AreaChart = () => {
               onChange={(e) => setFilter(e.target.value as FilterType)}
               className="appearance-none outline-none bg-slate-800 text-white px-4 py-1 rounded-md border border-slate-700 cursor-pointer pr-8 transition"
             >
-              <option value="years">Years</option>
-              <option value="months">Months</option>
-              <option value="weeks">Weeks</option>
+              <option value="year">Years</option>
+              <option value="month">Months</option>
+              <option value="week">Weeks</option>
             </select>
             <div className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2">
               <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
@@ -147,8 +136,8 @@ const AreaChart = () => {
       <div className="">
         <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="w-full">
           {/* Grid Lines */}
-          {[0, 50, 100, 150, 200].map((gridValue) => {
-            const y = padding.top + chartHeight - (gridValue / data.maxValue) * chartHeight
+          {gridValues.map((gridValue) => {
+            const y = padding.top + chartHeight - (gridValue / chartData?.maxValue) * chartHeight
             return (
               <g key={`grid-${gridValue}`}>
                 <line
@@ -167,7 +156,7 @@ const AreaChart = () => {
                   className="text-xs text-gray-500 font-mono"
                   fill="#64748b"
                 >
-                  {gridValue}
+                  {Math.round(gridValue)}
                 </text>
               </g>
             )
@@ -215,9 +204,12 @@ const AreaChart = () => {
           />
 
           {/* X-axis labels */}
-          {data.points.map((point, index) => {
-            const x = padding.left + index * (chartWidth / (data.points.length - 1))
-            return (
+          {chartData.points.map((point, index) => {
+            const x = padding.left + index * (chartWidth / (chartData.points.length - 1))
+            // প্রতি ৫ম label দেখানো (অনেক labels হলে)
+            const showLabel = chartData.points.length > 15 ? index % 5 === 0 : true;
+            
+            return showLabel ? (
               <text
                 key={`label-${index}`}
                 x={x}
@@ -228,7 +220,7 @@ const AreaChart = () => {
               >
                 {point.label}
               </text>
-            )
+            ) : null
           })}
         </svg>
       </div>

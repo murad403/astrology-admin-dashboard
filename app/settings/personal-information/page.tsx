@@ -1,32 +1,47 @@
+/* eslint-disable react-hooks/incompatible-library */
 "use client"
 import BackButton from '@/app/componensts/button/BackButton'
 import Image from 'next/image'
 import React, { useState } from 'react'
 import profileImage from "@/public/admin.png"
 import { BiEdit } from 'react-icons/bi'
-// import PhoneInput from '@dvij-infotech/react-phone-input-2-country-sort'
-// import PhoneInput from 'react-phone-input-2'
-import '@dvij-infotech/react-phone-input-2-country-sort/lib/style.css'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { TbCameraPlus } from 'react-icons/tb';
 import AdminHeader from '@/app/componensts/shared/AdminHeader';
+import { useProfileQuery } from '@/redux/features/auth/authApi'
+import { useUpdateProfileInformationMutation } from '@/redux/features/setting/settingApi'
 
 type TInputs = {
     name: string;
     email: string;
+    profile_picture: string;
 }
 
 
 const PersonalInformation = () => {
     const [isEdit, setIsEdit] = useState<boolean>(false);
-    const [phone, setPhone] = useState<string>("");
-    const [photo, setPhoto] = useState<string>("");
-    const { register, handleSubmit, formState: { errors }  } = useForm<TInputs>()
+    const {data} = useProfileQuery(undefined);
+    const { register, handleSubmit, watch  } = useForm<TInputs>();
+    const [updateProfileInformation, {isLoading}] = useUpdateProfileInformationMutation();
     
+    // const profile_picture = watch('profile_picture')?.[0];
+    // console.log(data?.id)
+    
+    const onSubmit: SubmitHandler<TInputs> = async() => {
+        const name = watch("name");
+        const profile_picture = watch("profile_picture")?.[0];
+        const updatedData = {
+            name, profile: {
+                profile_picture
+            }
+        }
 
-    const onSubmit: SubmitHandler<TInputs> = (data) => {
-        console.log(data)
-        console.log(phone, photo);
+        try {
+            const result = await updateProfileInformation({userId: data?.id, updatedData}).unwrap();
+            console.log(result);
+        } catch (error) {
+            console.log(error)
+        }
     }
     return (
         <div className='space-y-5'>
@@ -46,7 +61,7 @@ const PersonalInformation = () => {
                             <label htmlFor="photo" className='text-header text-2xl'>
                                 <TbCameraPlus />
                             </label>
-                            <input className='hidden' name='photo' id='photo' onChange={(e) => setPhoto(e.target.value)} type="file" />
+                            <input className='hidden' id='photo' {...register("profile_picture")} type="file" />
                         </div>
                     </div>
                     <p className='text-lg text-title'>Profile</p>
@@ -56,16 +71,12 @@ const PersonalInformation = () => {
                     <form className='space-y-5' onSubmit={handleSubmit(onSubmit)}>
                         <div>
                             <label className="block text-header font-semibold text-[16px] mb-2 capitalize">Name</label>
-                            <input defaultValue={"john max"} disabled={!isEdit} {...register("name")} className='py-3 text-title px-4 outline-none border border-border-color rounded-xl appearance-none w-full' type="text" />
+                            <input defaultValue={data?.name} disabled={!isEdit} {...register("name")} className='py-3 text-title px-4 outline-none border border-border-color rounded-xl appearance-none w-full' type="text" />
                         </div>
                         <div>
                             <label className="block text-header font-semibold text-[16px] mb-2 capitalize">Email</label>
-                            <input {...register("email")} disabled className='py-3 text-title px-4 outline-none border border-border-color rounded-xl appearance-none w-full' type="email" defaultValue={"hudai@gmail.com"} />
+                            <input {...register("email")} disabled className='py-3 text-title px-4 outline-none border border-border-color rounded-xl appearance-none w-full' type="email" defaultValue={data?.email} />
                         </div>
-                        {/* <div>
-                            <label className="block text-header font-semibold text-[16px] mb-2 capitalize">Phone</label>
-                            <PhoneInput disabled={!isEdit} value={phone} onChange={(value: string) => setPhone(value)} containerStyle={{ width: "100%", padding: "0px 0px" }} inputStyle={{ width: "100%", height: "50px", border: "1px solid #64748b", outline: "none", backgroundColor: "#15192D", borderRadius: "12px", color: "#ABABAB" }} country={'us'} />
-                        </div> */}
                         <button type='submit' className={`bg-main text-header py-3 w-full rounded-lg cursor-pointer text-center ${isEdit ? "block" : "hidden"}`}>Save</button>
                     </form>
                 </div>

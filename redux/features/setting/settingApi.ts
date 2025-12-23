@@ -2,7 +2,7 @@ import baseApi from "@/redux/api/api";
 
 const settingsApi = baseApi.injectEndpoints({
     endpoints: (builder) =>({
-        changePassword: builder.mutation({
+        adminChangePassword: builder.mutation({
             query: (data) =>{
                 return {
                     url: "/change-password/",
@@ -10,8 +10,36 @@ const settingsApi = baseApi.injectEndpoints({
                     body: data
                 }
             }
+        }),
+        getPrivacyPolicy: builder.query({
+            query: () =>{
+                return {
+                    url: "/dashboard/privacy-policy/1/",
+                    method: "GET"
+                }
+            },
+            providesTags: ["settings"]
+        }),
+        updatePrivacyPolicy: builder.mutation({
+            query: (data) =>{
+                return {
+                    url: "/dashboard/privacy-policy/1/update/",
+                    method: "PUT",
+                    body: data
+                }
+            },
+            invalidatesTags: ["settings"]
+        }),
+        updateProfileInformation: builder.mutation({
+            query: (data) =>{
+                return {
+                    url: `/dashboard/subscribers/${data?.userId}/update/`,
+                    method: "PATCH",
+                    body: data?.updatedData
+                }
+            }
         })
     })
 })
 
-export const {useChangePasswordMutation} = settingsApi;
+export const {useAdminChangePasswordMutation, useGetPrivacyPolicyQuery, useUpdatePrivacyPolicyMutation, useUpdateProfileInformationMutation} = settingsApi;

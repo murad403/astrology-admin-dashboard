@@ -1,15 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import BackButton from '@/app/componensts/button/BackButton'
 import FormHandler from '@/app/componensts/form/FormHandler'
 import FormInput from '@/app/componensts/form/FormInput'
 import AdminHeader from '@/app/componensts/shared/AdminHeader'
+import { useAdminChangePasswordMutation } from '@/redux/features/setting/settingApi'
 import React, { useState } from 'react'
 import { LuEye, LuEyeOff } from 'react-icons/lu'
+import { toast } from 'react-toastify'
 
 type TChangePassword = {
-    currentPassword: string;
-    newPassword: string;
-    confirmNewPassword: string;
+    old_password: string;
+    new_password: string;
+    confirm_password: string;
 }
 
 const ChangePassword = () => {
@@ -23,8 +26,16 @@ const ChangePassword = () => {
             message: 'Password must be at least 8 characters'
         }
     }
-    const onsubmit = (data: TChangePassword) => {
-        console.log(data);
+    const [adminChangePassword, { isLoading }] = useAdminChangePasswordMutation();
+
+    const onsubmit = async (data: TChangePassword) => {
+        try {
+            const result = await adminChangePassword(data).unwrap();
+            toast(result?.message);
+        } catch (error: any) {
+            // console.log(error)
+            toast(error?.data?.details?.old_password?.[0] || error?.data?.details?.new_password?.[0]);
+        }
     }
 
     return (
@@ -39,7 +50,7 @@ const ChangePassword = () => {
                 <div className='mt-5'>
                     <FormHandler onSubmit={onsubmit}>
                         <div className="relative mb-5">
-                            <FormInput label="Enter Current Password" name="currentPassword" type={showCurrentPassword ? "text" : "password"} placeholder="Enter current password" validation={passwordValidation}></FormInput>
+                            <FormInput label="Enter Current Password" name="old_password" type={showCurrentPassword ? "text" : "password"} placeholder="Enter current password" validation={passwordValidation}></FormInput>
                             <div onClick={() => setShowCurrentPassword(!showCurrentPassword)} className="absolute top-12 text-xl right-5 text-title">
                                 {
                                     showCurrentPassword ? <LuEye /> : <LuEyeOff />
@@ -47,7 +58,7 @@ const ChangePassword = () => {
                             </div>
                         </div>
                         <div className="relative mb-5">
-                            <FormInput label="Enter New Password" name="newPassword" type={showNewPassword ? "text" : "password"} placeholder="Enter new password" validation={passwordValidation}></FormInput>
+                            <FormInput label="Enter New Password" name="new_password" type={showNewPassword ? "text" : "password"} placeholder="Enter new password" validation={passwordValidation}></FormInput>
                             <div onClick={() => setShowNewPassword(!showNewPassword)} className="absolute top-12 text-xl right-5 text-title">
                                 {
                                     showNewPassword ? <LuEye /> : <LuEyeOff />
@@ -55,14 +66,18 @@ const ChangePassword = () => {
                             </div>
                         </div>
                         <div className="relative mb-5">
-                            <FormInput label="Confirm New Password" name="confirmNewPassword" type={showConfirmNewPassword ? "text" : "password"} placeholder="Re-enter new password " validation={passwordValidation}></FormInput>
+                            <FormInput label="Confirm New Password" name="confirm_password" type={showConfirmNewPassword ? "text" : "password"} placeholder="Re-enter new password " validation={passwordValidation}></FormInput>
                             <div onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)} className="absolute top-12 text-xl right-5 text-title">
                                 {
                                     showConfirmNewPassword ? <LuEye /> : <LuEyeOff />
                                 }
                             </div>
                         </div>
-                        <button type="submit" className="bg-main w-full text-header rounded-xl py-3 cursor-pointer">Save</button>
+                        <button type="submit" className="bg-main w-full text-header rounded-xl py-3 cursor-pointer">
+                            {
+                                isLoading ? <span className="loading loading-spinner text-header"></span> : <span className="text-header">Save</span>
+                            }
+                        </button>
                     </FormHandler>
                 </div>
             </div>

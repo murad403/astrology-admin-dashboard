@@ -1,24 +1,8 @@
 "use client"
 import { Pie, PieChart } from "recharts"
-import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-import {
-    ChartConfig,
-    ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent,
-} from "@/components/ui/chart"
-
-const chartData = [
-    { browser: "Nature Chart", visitors: 275, fill: "#28D33C" },
-    { browser: "Transit Chart", visitors: 200, fill: "#E300C5" },
-    { browser: "Synastry Chart", visitors: 187, fill: "#FFFFFF" }
-]
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { useDashboardQuery } from "@/redux/features/dashboard/dashboardApi"
 
 const chartConfig = {
     visitors: {
@@ -46,7 +30,16 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
+
 export function ChartGenerate() {
+    const { data } = useDashboardQuery(undefined);
+    // console.log(data?.chart_generate);
+
+    const chartData = [
+        { browser: "Natal Chart", visitors: data?.chart_generate?.natal, fill: "#28D33C" },
+        { browser: "Transit Chart", visitors: data?.chart_generate?.transit, fill: "#E300C5" },
+        { browser: "Synastry Chart", visitors: data?.chart_generate?.synastry, fill: "#FFFFFF" }
+    ]
     return (
         <div className="h-[350px] bg-common p-5 border border-border-color rounded-xl">
             <Card className="flex flex-col bg-common border-none">

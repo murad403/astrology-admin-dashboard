@@ -12,7 +12,7 @@ const Notifications = () => {
       <span className="loading loading-spinner text-header"></span>
     </div>
   }
-  console.log(data);
+  // console.log(data);
   return (
     <div className='space-y-5'>
       <AdminHeader title='Notification' description='Manage your notification here.'></AdminHeader>
@@ -23,7 +23,7 @@ const Notifications = () => {
             <div key={notification?.id} className='flex items-center gap-3 p-3 bg-common rounded-xl border border-border-color'>
               <Image src={logo} alt='logo' width={48} height={48} className='rounded-full'></Image>
               <div>
-                <h3 className='font-semibold text-[17px] text-header'>New User Registered</h3>
+                <h3 className='font-semibold text-[17px] text-header'>{notification?.title || "New User Registered"}</h3>
                 <p className='text-title text-[15px] font-medium'>{notification?.message}</p>
               </div>
             </div>
