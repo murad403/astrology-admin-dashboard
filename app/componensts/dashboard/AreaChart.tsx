@@ -1,5 +1,5 @@
 "use client"
-
+import { useDashboardQuery } from "@/redux/features/dashboard/dashboardApi"
 import { useState, useMemo } from "react"
 
 type FilterType = "years" | "months" | "weeks"
@@ -16,6 +16,8 @@ interface ChartData {
 
 const AreaChart = () => {
   const [filter, setFilter] = useState<FilterType>("years")
+  const {data: dashboardData, isLoading} = useDashboardQuery(undefined);
+  // console.log(dashboardData?.earning_overview);
 
   const chartData: Record<FilterType, ChartData> = useMemo(
     () => ({

@@ -13,14 +13,3 @@ export type TUser = {
   is_verified: boolean
 }
 
-export type TProfile = {
-  id: number
-  profile_picture: any
-  date_of_birth: string
-  time_of_birth: string
-  birth_country: string
-  birth_city: string
-  created_at: string
-  updated_at: string
-  user: number
-}

@@ -1,5 +1,4 @@
 "use client";
-import { RiDeleteBin6Line } from "react-icons/ri"
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog"
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious} from "@/components/ui/pagination"
 import { useState } from "react";
@@ -11,17 +10,12 @@ import { TUser } from "../types/user.types";
 
 
 const UsersTable = () => {
-
     const { data, isLoading } = useUserListQuery(undefined);
-    // console.log(data?.users?.[0]);
     const [userId, setUserId] = useState<number>();
-    // console.log(userId)
     const {data: userDetails} = useUserDetailsQuery(userId);
-    // console.log(userDetails);
 
-    const [currentPage, setCurrentPage] = useState(1);
-    
     // Fix: Ensure totalPages is always a valid number
+    const [currentPage, setCurrentPage] = useState(1);
     const totalPages = Math.max(1, Math.ceil((data?.count || 0) / 10));
     const startIndex = (currentPage - 1) * 10;
     const endIndex = startIndex + 10;
@@ -68,11 +62,7 @@ const UsersTable = () => {
         return pages;
     };
 
-    const handleRemoveUser = () => {
-        console.log("user remove");
-    }
-
-    // Show loading state
+    
     if (isLoading) {
         return <div className="flex justify-center w-full mt-20">
             <span className="loading loading-spinner text-header"></span>

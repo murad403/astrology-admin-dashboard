@@ -2,10 +2,10 @@
 import BackButton from '@/app/componensts/button/BackButton'
 import Image from 'next/image'
 import React, { useState } from 'react'
-import profileImage from "../../../public/admin.jpg";
+import profileImage from "@/public/admin.png"
 import { BiEdit } from 'react-icons/bi'
 // import PhoneInput from '@dvij-infotech/react-phone-input-2-country-sort'
-import PhoneInput from 'react-phone-input-2'
+// import PhoneInput from 'react-phone-input-2'
 import '@dvij-infotech/react-phone-input-2-country-sort/lib/style.css'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { TbCameraPlus } from 'react-icons/tb';

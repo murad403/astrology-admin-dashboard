@@ -2,10 +2,12 @@
 import { useUserListQuery } from '@/redux/features/user/userApi';
 import React from 'react'
 import { HiOutlineUserGroup } from 'react-icons/hi'
+import { TUser } from '../types/user.types';
 
 const UserStats = () => {
     const { data, isLoading } = useUserListQuery(undefined);
-    // console.log(data);
+    const activeUser = data?.users?.filter((user: TUser) => user.is_active == true);
+    // console.log(activeUser?.length);
     return (
         <div className='flex justify-between items-center gap-5 *:border *:border-border-color'>
             <div className='rounded-xl p-5 bg-common w-1/2 space-y-8'>
@@ -24,7 +26,7 @@ const UserStats = () => {
                     <HiOutlineUserGroup />
                 </div>
                 <div>
-                <h2 className='font-medium text-3xl text-header'>250</h2>
+                <h2 className='font-medium text-3xl text-header'>{activeUser?.length}</h2>
                     <p className='text-title font-medium text-[16px]'>+12% from last month</p>
                 </div>
             </div>
