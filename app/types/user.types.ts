@@ -2,13 +2,15 @@
 
 export type TUser = {
   id: number
-  email: string
   name: string
+  email: string
+  date_of_birth: string
+  birth_country: string
+  time_of_birth: string
+  birth_city: string
+  profile_picture: any
   is_active: boolean
-  is_staff: boolean
   is_verified: boolean
-  date_joined: string
-  profile: TProfile
 }
 
 export type TProfile = {

@@ -5,7 +5,7 @@ import { HiOutlineUserGroup } from 'react-icons/hi'
 
 const UserStats = () => {
     const { data, isLoading } = useUserListQuery(undefined);
-    console.log(data);
+    // console.log(data);
     return (
         <div className='flex justify-between items-center gap-5 *:border *:border-border-color'>
             <div className='rounded-xl p-5 bg-common w-1/2 space-y-8'>

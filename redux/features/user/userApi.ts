@@ -9,9 +9,17 @@ const userApi = baseApi.injectEndpoints({
                     method: "GET"
                 }
             }
+        }),
+        userDetails: builder.query({
+            query: (userId: number | undefined) =>{
+                return {
+                    url: `/dashboard/users/${userId}/`,
+                    method: "GET"
+                }
+            }
         })
     })
 })
 
 
-export const {useUserListQuery} = userApi;
+export const {useUserListQuery, useUserDetailsQuery} = userApi;

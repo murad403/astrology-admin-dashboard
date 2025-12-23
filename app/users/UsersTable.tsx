@@ -1,45 +1,40 @@
 "use client";
 import { RiDeleteBin6Line } from "react-icons/ri"
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from "@/components/ui/pagination"
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious} from "@/components/ui/pagination"
 import { useState } from "react";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import Image from "next/image";
 import profileImage from "@/public/admin.png";
-import { useUserListQuery } from "@/redux/features/user/userApi";
+import { useUserDetailsQuery, useUserListQuery } from "@/redux/features/user/userApi";
 import { TUser } from "../types/user.types";
 
+
 const UsersTable = () => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const totalPages = Math.ceil(20 / 5);
-    const startIndex = (currentPage - 1) * 5;
-    const endIndex = startIndex + 5;
-    const currentData = [2, 3, 4].slice(startIndex, endIndex);
+
     const { data, isLoading } = useUserListQuery(undefined);
     // console.log(data?.users?.[0]);
+    const [userId, setUserId] = useState<number>();
+    // console.log(userId)
+    const {data: userDetails} = useUserDetailsQuery(userId);
+    // console.log(userDetails);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    
+    // Fix: Ensure totalPages is always a valid number
+    const totalPages = Math.max(1, Math.ceil((data?.count || 0) / 10));
+    const startIndex = (currentPage - 1) * 10;
+    const endIndex = startIndex + 10;
+    const currentData = data?.users?.slice(startIndex, endIndex) || [];
 
     const handlePageChange = (page: number) => {
         if (page >= 1 && page <= totalPages) {
             setCurrentPage(page);
         }
     };
+    
     const getPageNumbers = () => {
-        const pages = [];
+        const pages: (number | string)[] = [];
         const maxVisible = 5;
 
         if (totalPages <= maxVisible) {
@@ -76,12 +71,19 @@ const UsersTable = () => {
     const handleRemoveUser = () => {
         console.log("user remove");
     }
+
+    // Show loading state
+    if (isLoading) {
+        return <div className="flex justify-center w-full mt-20">
+            <span className="loading loading-spinner text-header"></span>
+        </div>
+    }
+
     return (
         <div className="p-5 bg-common rounded-xl border border-border-color space-y-5">
             <h2 className="font-semibold text-xl text-header">Users</h2>
             <div className="overflow-x-auto border border-border-color rounded-xl">
                 <table className="table">
-                    {/* head */}
                     <thead>
                         <tr className="bg-main text-header">
                             <th>User</th>
@@ -94,27 +96,27 @@ const UsersTable = () => {
                     </thead>
                     <tbody>
                         {
-                            data?.users.map((user: TUser) =>
+                            currentData?.map((user: TUser) =>
                                 <tr className="bg-[#1F2544] text-header" key={user?.id}>
                                     <td className="flex items-center gap-3">
-                                        <Image src={user?.profile?.profile_picture || profileImage} alt="user profile" width={48} height={48} className="rounded-full"></Image>
+                                        <Image src={user?.profile_picture || profileImage} alt="user profile" width={48} height={48} className="rounded-full"></Image>
                                         <div>
                                             <h3 className="font-semibold text-[16px]">{user?.name}</h3>
                                             <p className="text-title font-medium text-sm">{user?.email}</p>
                                         </div>
                                     </td>
-                                    <td>{user?.profile?.date_of_birth}</td>
-                                    <td>{user?.profile?.birth_country}</td>
-                                    <td>{user?.profile?.time_of_birth}</td>
-                                    <td>{user?.profile?.birth_city}</td>
+                                    <td className="text-header">{user?.date_of_birth}</td>
+                                    <td>{user?.birth_country}</td>
+                                    <td>{user?.time_of_birth}</td>
+                                    <td>{user?.birth_city}</td>
                                     <td>
-                                        <div className="flex gap-3">
+                                        <div className=" ml-3">
                                             {/* view user details modal */}
                                             <div>
                                                 <Dialog>
                                                     <form>
                                                         <DialogTrigger asChild>
-                                                            <button className="cursor-pointer">
+                                                            <button onClick={() => setUserId(user?.id)} className="cursor-pointer">
                                                                 <MdOutlineRemoveRedEye size={20} />
                                                             </button>
                                                         </DialogTrigger>
@@ -122,30 +124,35 @@ const UsersTable = () => {
                                                         <DialogContent className="w-[540px] p-7 space-y-7">
                                                             <DialogHeader>
                                                                 <DialogTitle className="text-2xl">
-                                                                    View User - {user?.name}
+                                                                    View User - {userDetails?.name}
                                                                 </DialogTitle>
                                                             </DialogHeader>
 
                                                             <div className="space-y-4">
                                                                 <div className="flex justify-between">
-                                                                    <h3 className="text-xl w-[40%]">Name:</h3>
-                                                                    <p className="w-[60%] border border-title rounded-xl p-3">{user?.name}</p>
+                                                                    <h3 className="text-xl w-[40%]">Email:</h3>
+                                                                    <p className="w-[70%] border overflow-x-hidden border-title rounded-xl p-3">{userDetails?.email}</p>
                                                                 </div>
                                                                 <div className="flex justify-between">
+                                                                    <h3 className="text-xl w-[40%]">Name:</h3>
+                                                                    <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.name}</p>
+                                                                </div>
+                                                                
+                                                                <div className="flex justify-between">
                                                                     <h3 className="text-xl w-[40%]">Date of Birth:</h3>
-                                                                    <p className="w-[60%] border border-title rounded-xl p-3">{user?.profile?.date_of_birth}</p>
+                                                                    <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.profile?.date_of_birth}</p>
                                                                 </div>
                                                                 <div className="flex justify-between">
                                                                     <h3 className="text-xl w-[40%]">Birth Country:</h3>
-                                                                    <p className="w-[60%] border border-title rounded-xl p-3">{user?.profile?.birth_country}</p>
+                                                                    <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.profile?.birth_country}</p>
                                                                 </div>
                                                                 <div className="flex justify-between">
                                                                     <h3 className="text-xl w-[40%]">Birth City:</h3>
-                                                                    <p className="w-[60%] border border-title rounded-xl p-3">{user?.profile?.birth_city}</p>
+                                                                    <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.profile?.birth_city}</p>
                                                                 </div>
                                                                 <div className="flex justify-between">
                                                                     <h3 className="text-xl w-[40%]">Time of Birth:</h3>
-                                                                    <p className="w-[60%] border border-title rounded-xl p-3">{user?.profile?.time_of_birth}</p>
+                                                                    <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.profile?.time_of_birth}</p>
                                                                 </div>
                                                             </div>
 
@@ -160,7 +167,7 @@ const UsersTable = () => {
                                             </div>
 
                                             {/* remove user button modal */}
-                                            <div>
+                                            {/* <div>
                                                 <Dialog>
                                                     <form>
                                                         <DialogTrigger asChild>
@@ -188,7 +195,7 @@ const UsersTable = () => {
                                                         </DialogContent>
                                                     </form>
                                                 </Dialog>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </td>
                                 </tr>
@@ -214,7 +221,7 @@ const UsersTable = () => {
                             {getPageNumbers().map((page, index) => (
                                 <PaginationItem key={index}>
                                     {page === "..." ? (
-                                        <span className="px-3 py-2">...</span>
+                                        <span className="px-3 py-2 text-header tracking-[10px]">...</span>
                                     ) : (
                                         <PaginationLink
                                             onClick={() => handlePageChange(page as number)}
