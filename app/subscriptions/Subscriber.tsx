@@ -11,7 +11,6 @@ import { TSubscriber, TSubscriptionPlan } from "../types/subscription.types";
 import { useSubscriptionPlansQuery, useUpdateSubscriptionMutation } from "@/redux/features/subscription/subscriptionApi";
 import { CiCalendar } from "react-icons/ci";
 import { toast } from "react-toastify";
-import { Plane } from "lucide-react";
 
 
 type TSubscriberEdit = {
@@ -20,7 +19,7 @@ type TSubscriberEdit = {
     end_date: string;
 }
 const Subscriber = ({ subscribers }: { subscribers: TSubscriber[] }) => {
-    const [updateSubscription, { isLoading, data }] = useUpdateSubscriptionMutation();
+    const [updateSubscription, { isLoading }] = useUpdateSubscriptionMutation();
     // console.log("updated data", data);
 
 

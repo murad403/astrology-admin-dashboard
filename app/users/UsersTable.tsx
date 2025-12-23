@@ -1,6 +1,6 @@
 "use client";
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog"
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious} from "@/components/ui/pagination"
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 import { useState } from "react";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import Image from "next/image";
@@ -12,7 +12,7 @@ import { TUser } from "../types/user.types";
 const UsersTable = () => {
     const { data, isLoading } = useUserListQuery(undefined);
     const [userId, setUserId] = useState<number>();
-    const {data: userDetails} = useUserDetailsQuery(userId);
+    const { data: userDetails } = useUserDetailsQuery(userId);
 
     // Fix: Ensure totalPages is always a valid number
     const [currentPage, setCurrentPage] = useState(1);
@@ -26,7 +26,7 @@ const UsersTable = () => {
             setCurrentPage(page);
         }
     };
-    
+
     const getPageNumbers = () => {
         const pages: (number | string)[] = [];
         const maxVisible = 5;
@@ -62,7 +62,7 @@ const UsersTable = () => {
         return pages;
     };
 
-    
+
     if (isLoading) {
         return <div className="flex justify-center w-full mt-20">
             <span className="loading loading-spinner text-header"></span>
@@ -119,15 +119,15 @@ const UsersTable = () => {
                                                             </DialogHeader>
 
                                                             <div className="space-y-4">
-                                                                <div className="flex justify-between">
-                                                                    <h3 className="text-xl w-[40%]">Email:</h3>
-                                                                    <p className="w-[70%] border overflow-x-hidden border-title rounded-xl p-3">{userDetails?.email}</p>
-                                                                </div>
+
                                                                 <div className="flex justify-between">
                                                                     <h3 className="text-xl w-[40%]">Name:</h3>
                                                                     <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.name}</p>
                                                                 </div>
-                                                                
+                                                                <div className="flex justify-between">
+                                                                    <h3 className="text-xl w-[40%]">Email:</h3>
+                                                                    <p className="w-[70%] border overflow-x-hidden border-title rounded-xl p-3">{userDetails?.email}</p>
+                                                                </div>
                                                                 <div className="flex justify-between">
                                                                     <h3 className="text-xl w-[40%]">Date of Birth:</h3>
                                                                     <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.profile?.date_of_birth}</p>

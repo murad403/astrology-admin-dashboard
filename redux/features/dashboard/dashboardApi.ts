@@ -1,6 +1,6 @@
 import baseApi from "@/redux/api/api";
 
-const userApi = baseApi.injectEndpoints({
+const dashboardApi = baseApi.injectEndpoints({
     endpoints: (builder) =>({
         dashboard: builder.query({
             query: () =>{
@@ -14,4 +14,4 @@ const userApi = baseApi.injectEndpoints({
 })
 
 
-export const {useDashboardQuery} = userApi;
+export const {useDashboardQuery} = dashboardApi;
