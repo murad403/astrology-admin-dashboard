@@ -6,6 +6,7 @@ import { useSubscriptionStatsQuery } from '@/redux/features/subscription/subscri
 
 const SubscriptionsStats = () => {
     const { data: subscriptionStats, isLoading } = useSubscriptionStatsQuery(undefined);
+    console.log(subscriptionStats?.stats)
     if (isLoading) {
         return (
             <div className="w-full border h-[170px] border-border-color rounded-xl p-5 bg-common flex items-center justify-center">
@@ -21,8 +22,8 @@ const SubscriptionsStats = () => {
                     <HiOutlineUserGroup />
                 </div>
                 <div>
-                    <h2 className='font-medium text-3xl text-header'>{subscriptionStats?.stats?.total_subscribers}</h2>
-                    <p className='text-title font-medium text-[16px]'>+{subscriptionStats?.stats?.growth_percentage}% from last month</p>
+                    <h2 className='font-medium text-3xl text-header'>{subscriptionStats?.stats?.total_subscribers?.count}</h2>
+                    <p className='text-title font-medium text-[16px]'>+{subscriptionStats?.stats?.total_subscribers?.growth}% from last month</p>
                 </div>
             </div>
 
@@ -32,8 +33,8 @@ const SubscriptionsStats = () => {
                     <LuEye />
                 </div>
                 <div>
-                    <h2 className='font-medium text-3xl text-header'>{subscriptionStats?.stats?.active_subscribers}</h2>
-                    <p className='text-title font-medium text-[16px]'>+{subscriptionStats?.stats?.growth_percentage}% from last month</p>
+                    <h2 className='font-medium text-3xl text-header'>{subscriptionStats?.stats?.active_subscribers?.count}</h2>
+                    <p className='text-title font-medium text-[16px]'>+{subscriptionStats?.stats?.active_subscribers?.growth}% from last month</p>
                 </div>
             </div>
 
@@ -43,8 +44,8 @@ const SubscriptionsStats = () => {
                     <TfiMoney />
                 </div>
                 <div>
-                    <h2 className='font-medium text-3xl text-[#3BDD56]'>${subscriptionStats?.stats?.total_earnings}</h2>
-                    <p className='text-title font-medium text-[16px]'>+{subscriptionStats?.stats?.growth_percentage}% from last month</p>
+                    <h2 className='font-medium text-3xl text-[#3BDD56]'>${subscriptionStats?.stats?.total_earnings?.count}</h2>
+                    <p className='text-title font-medium text-[16px]'>+{subscriptionStats?.stats?.total_earnings?.growth}% from last month</p>
                 </div>
             </div>
         </div>
