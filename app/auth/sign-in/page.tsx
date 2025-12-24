@@ -29,7 +29,7 @@ const SignIn = () => {
             router.push('/');
             toast(result?.message);
         } catch (error: any) {
-            // console.log(error.data.non_field_errors[0]);
+            
             toast(error?.data?.non_field_errors?.[0]);
         }
         

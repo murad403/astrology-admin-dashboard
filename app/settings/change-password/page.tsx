@@ -4,7 +4,11 @@ import BackButton from '@/app/componensts/button/BackButton'
 import FormHandler from '@/app/componensts/form/FormHandler'
 import FormInput from '@/app/componensts/form/FormInput'
 import AdminHeader from '@/app/componensts/shared/AdminHeader'
+import { removeToken } from '@/app/utils/auth'
+import { setUser } from '@/redux/features/auth/authSlice'
 import { useAdminChangePasswordMutation } from '@/redux/features/setting/settingApi'
+import { useAppDispatch } from '@/redux/hooks'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { LuEye, LuEyeOff } from 'react-icons/lu'
 import { toast } from 'react-toastify'
@@ -19,6 +23,8 @@ const ChangePassword = () => {
     const [showCurrentPassword, setShowCurrentPassword] = useState<boolean>(false);
     const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
     const [showConfirmNewPassword, setShowConfirmNewPassword] = useState<boolean>(false);
+    const dispatch = useAppDispatch();
+    const router = useRouter();
     const passwordValidation = {
         required: 'Password is required',
         minLength: {
@@ -32,8 +38,10 @@ const ChangePassword = () => {
         try {
             const result = await adminChangePassword(data).unwrap();
             toast(result?.message);
+            await removeToken();
+            dispatch(setUser(null));
+            router.push('/auth/sign-in');
         } catch (error: any) {
-            // console.log(error)
             toast(error?.data?.details?.old_password?.[0] || error?.data?.details?.new_password?.[0]);
         }
     }

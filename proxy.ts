@@ -1,20 +1,39 @@
 "use server"
 import { NextRequest, NextResponse } from "next/server";
-import { jwtDecode } from "jwt-decode";
-import { cookies } from "next/headers";
 import { getCurrentUser } from "./app/utils/auth";
 
 const SIGN_IN_URL = "/auth/sign-in";
+const DASHBOARD_URL = "/";
 
 export async function proxy(request: NextRequest) {
-    const { access, refresh } = await getCurrentUser();
-    if (!refresh) {
+    const { refresh } = await getCurrentUser();
+    const { pathname } = request.nextUrl;
+
+    const isAuthPage = pathname.startsWith("/auth");
+
+    if (refresh && isAuthPage) {
+        return NextResponse.redirect(new URL(DASHBOARD_URL, request.url));
+    }
+
+    if (!refresh && !isAuthPage) {
         return NextResponse.redirect(new URL(SIGN_IN_URL, request.url));
     }
-    
+
+    return NextResponse.next();
 }
 
 
 export const config = {
-    matcher: ["/"]
+    matcher: [
+        "/", 
+        "/users", 
+        "/subscription", 
+        "/notifications", 
+        "/settings", 
+        "/settings/personal-information", 
+        "/settings/change-password", 
+        "/settings/privacy-policy", 
+        "/settings/privacy-policy/edit-terms-conditions",
+        "/auth/:path*"
+    ]
 };

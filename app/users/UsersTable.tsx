@@ -81,8 +81,8 @@ const UsersTable = () => {
             <div className="overflow-x-auto border border-border-color rounded-xl">
                 <table className="table">
                     <thead>
-                        <tr className="bg-main text-header">
-                            <th>User</th>
+                        <tr className="bg-main text-header text-[18px]">
+                            <th className="pl-24">User</th>
                             <th>Date of Birth</th>
                             <th>Birth Country</th>
                             <th>Time of Birth</th>

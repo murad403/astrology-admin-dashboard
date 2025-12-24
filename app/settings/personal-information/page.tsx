@@ -11,6 +11,7 @@ import AdminHeader from '@/app/componensts/shared/AdminHeader';
 import { useProfileQuery } from '@/redux/features/auth/authApi'
 import { useUpdateProfileInformationMutation } from '@/redux/features/setting/settingApi'
 import { toast } from 'react-toastify'
+import { useRouter } from 'next/navigation'
 
 type TInputs = {
     name: string;
@@ -24,7 +25,8 @@ const PersonalInformation = () => {
     const { data } = useProfileQuery(undefined);
     const { register, handleSubmit, watch } = useForm<TInputs>();
     const [updateProfileInformation, { isLoading }] = useUpdateProfileInformationMutation();
-    console.log(data)
+    const router = useRouter();
+    // console.log(data)
 
 
     const onSubmit: SubmitHandler<TInputs> = async () => {
@@ -39,6 +41,7 @@ const PersonalInformation = () => {
 
         try {
             const result = await updateProfileInformation(formData).unwrap();
+            router.push("/settings");
             toast(result?.message);
             // console.log(result);
         } catch (error) {
