@@ -24,7 +24,7 @@ const PersonalInformation = () => {
     const { data } = useProfileQuery(undefined);
     const { register, handleSubmit, watch } = useForm<TInputs>();
     const [updateProfileInformation, { isLoading }] = useUpdateProfileInformationMutation();
-    // console.log(data?.profile?.profile_picture_url)
+    console.log(data)
 
 
     const onSubmit: SubmitHandler<TInputs> = async () => {

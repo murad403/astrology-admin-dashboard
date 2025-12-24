@@ -1,10 +1,18 @@
+"use client"
 import { HiOutlineUserGroup } from 'react-icons/hi'
 import { LuEye } from 'react-icons/lu'
 import { TfiMoney } from 'react-icons/tfi'
-import { TSubscriptionStats } from '../types/subscription.types'
+import { useSubscriptionStatsQuery } from '@/redux/features/subscription/subscriptionApi'
 
-const SubscriptionsStats = ({subscriptionStats}: {subscriptionStats: TSubscriptionStats}) => {
-    
+const SubscriptionsStats = () => {
+    const { data: subscriptionStats, isLoading } = useSubscriptionStatsQuery(undefined);
+    if (isLoading) {
+        return (
+            <div className="w-full border h-[170px] border-border-color rounded-xl p-5 bg-common flex items-center justify-center">
+                <span className="text-gray-400">Loading...</span>
+            </div>
+        );
+    }
     return (
         <div className='flex justify-between items-center gap-5 *:border *:border-border-color'>
             <div className='rounded-xl p-5 bg-common w-1/3 space-y-8'>
@@ -13,8 +21,8 @@ const SubscriptionsStats = ({subscriptionStats}: {subscriptionStats: TSubscripti
                     <HiOutlineUserGroup />
                 </div>
                 <div>
-                    <h2 className='font-medium text-3xl text-header'>{subscriptionStats?.total_subscribers}</h2>
-                    <p className='text-title font-medium text-[16px]'>+{subscriptionStats?.growth_percentage}% from last month</p>
+                    <h2 className='font-medium text-3xl text-header'>{subscriptionStats?.stats?.total_subscribers}</h2>
+                    <p className='text-title font-medium text-[16px]'>+{subscriptionStats?.stats?.growth_percentage}% from last month</p>
                 </div>
             </div>
 
@@ -24,8 +32,8 @@ const SubscriptionsStats = ({subscriptionStats}: {subscriptionStats: TSubscripti
                     <LuEye />
                 </div>
                 <div>
-                    <h2 className='font-medium text-3xl text-header'>{subscriptionStats?.active_subscribers}</h2>
-                    <p className='text-title font-medium text-[16px]'>+{subscriptionStats?.growth_percentage}% from last month</p>
+                    <h2 className='font-medium text-3xl text-header'>{subscriptionStats?.stats?.active_subscribers}</h2>
+                    <p className='text-title font-medium text-[16px]'>+{subscriptionStats?.stats?.growth_percentage}% from last month</p>
                 </div>
             </div>
 
@@ -35,8 +43,8 @@ const SubscriptionsStats = ({subscriptionStats}: {subscriptionStats: TSubscripti
                     <TfiMoney />
                 </div>
                 <div>
-                    <h2 className='font-medium text-3xl text-[#3BDD56]'>${subscriptionStats?.total_earnings}</h2>
-                    <p className='text-title font-medium text-[16px]'>+{subscriptionStats?.growth_percentage}% from last month</p>
+                    <h2 className='font-medium text-3xl text-[#3BDD56]'>${subscriptionStats?.stats?.total_earnings}</h2>
+                    <p className='text-title font-medium text-[16px]'>+{subscriptionStats?.stats?.growth_percentage}% from last month</p>
                 </div>
             </div>
         </div>

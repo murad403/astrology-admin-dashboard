@@ -10,6 +10,7 @@ const userApi = baseApi.injectEndpoints({
                 }
             }
         }),
+
         userDetails: builder.query({
             query: (userId: number | undefined) =>{
                 return {
@@ -18,6 +19,8 @@ const userApi = baseApi.injectEndpoints({
                 }
             }
         })
+
+        
     })
 })
 

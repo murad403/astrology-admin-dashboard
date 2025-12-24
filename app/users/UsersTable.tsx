@@ -11,10 +11,16 @@ import { TUser } from "../types/user.types";
 
 const UsersTable = () => {
     const { data, isLoading } = useUserListQuery(undefined);
-    const [userId, setUserId] = useState<number>();
-    const { data: userDetails } = useUserDetailsQuery(userId);
 
-    // Fix: Ensure totalPages is always a valid number
+    const [userId, setUserId] = useState<number | undefined>(undefined);
+    const { data: userDetails } = useUserDetailsQuery(userId, {
+        skip: !userId, 
+    });
+
+    const handleGetDetails = (id: number) => {
+        setUserId(id); 
+    }
+
     const [currentPage, setCurrentPage] = useState(1);
     const totalPages = Math.max(1, Math.ceil((data?.count || 0) / 10));
     const startIndex = (currentPage - 1) * 10;
@@ -104,55 +110,53 @@ const UsersTable = () => {
                                             {/* view user details modal */}
                                             <div>
                                                 <Dialog>
-                                                    <form>
-                                                        <DialogTrigger asChild>
-                                                            <button onClick={() => setUserId(user?.id)} className="cursor-pointer">
-                                                                <MdOutlineRemoveRedEye size={20} />
-                                                            </button>
-                                                        </DialogTrigger>
+                                                    <DialogTrigger asChild>
+                                                        <button onClick={() => handleGetDetails(user?.id)} className="cursor-pointer">
+                                                            <MdOutlineRemoveRedEye size={20} />
+                                                        </button>
+                                                    </DialogTrigger>
 
-                                                        <DialogContent className="w-[540px] p-7 space-y-7">
-                                                            <DialogHeader>
-                                                                <DialogTitle className="text-2xl">
-                                                                    View User - {userDetails?.name}
-                                                                </DialogTitle>
-                                                            </DialogHeader>
+                                                    <DialogContent className="w-[540px] p-7 space-y-7">
+                                                        <DialogHeader>
+                                                            <DialogTitle className="text-2xl">
+                                                                View User - {userDetails?.name}
+                                                            </DialogTitle>
+                                                        </DialogHeader>
 
-                                                            <div className="space-y-4">
+                                                        <div className="space-y-4">
 
-                                                                <div className="flex justify-between">
-                                                                    <h3 className="text-xl w-[40%]">Name:</h3>
-                                                                    <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.name}</p>
-                                                                </div>
-                                                                <div className="flex justify-between">
-                                                                    <h3 className="text-xl w-[40%]">Email:</h3>
-                                                                    <p className="w-[70%] border overflow-x-hidden border-title rounded-xl p-3">{userDetails?.email}</p>
-                                                                </div>
-                                                                <div className="flex justify-between">
-                                                                    <h3 className="text-xl w-[40%]">Date of Birth:</h3>
-                                                                    <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.profile?.date_of_birth}</p>
-                                                                </div>
-                                                                <div className="flex justify-between">
-                                                                    <h3 className="text-xl w-[40%]">Birth Country:</h3>
-                                                                    <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.profile?.birth_country}</p>
-                                                                </div>
-                                                                <div className="flex justify-between">
-                                                                    <h3 className="text-xl w-[40%]">Birth City:</h3>
-                                                                    <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.profile?.birth_city}</p>
-                                                                </div>
-                                                                <div className="flex justify-between">
-                                                                    <h3 className="text-xl w-[40%]">Time of Birth:</h3>
-                                                                    <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.profile?.time_of_birth}</p>
-                                                                </div>
+                                                            <div className="flex justify-between">
+                                                                <h3 className="text-xl w-[40%]">Name:</h3>
+                                                                <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.name}</p>
                                                             </div>
+                                                            <div className="flex justify-between">
+                                                                <h3 className="text-xl w-[40%]">Email:</h3>
+                                                                <p className="w-[70%] border overflow-x-hidden border-title rounded-xl p-3">{userDetails?.email}</p>
+                                                            </div>
+                                                            <div className="flex justify-between">
+                                                                <h3 className="text-xl w-[40%]">Date of Birth:</h3>
+                                                                <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.profile?.date_of_birth}</p>
+                                                            </div>
+                                                            <div className="flex justify-between">
+                                                                <h3 className="text-xl w-[40%]">Birth Country:</h3>
+                                                                <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.profile?.birth_country}</p>
+                                                            </div>
+                                                            <div className="flex justify-between">
+                                                                <h3 className="text-xl w-[40%]">Birth City:</h3>
+                                                                <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.profile?.birth_city}</p>
+                                                            </div>
+                                                            <div className="flex justify-between">
+                                                                <h3 className="text-xl w-[40%]">Birth Time:</h3>
+                                                                <p className="w-[70%] border border-title rounded-xl p-3">{userDetails?.profile?.time_of_birth}</p>
+                                                            </div>
+                                                        </div>
 
-                                                            <DialogFooter className="w-full space-x-7">
-                                                                <DialogClose className="w-full cursor-pointer h-[52px] bg-main text-white font-semibold rounded-xl" asChild>
-                                                                    <button>Okay</button>
-                                                                </DialogClose>
-                                                            </DialogFooter>
-                                                        </DialogContent>
-                                                    </form>
+                                                        <DialogFooter className="w-full space-x-7">
+                                                            <DialogClose className="w-full cursor-pointer h-[52px] bg-main text-white font-semibold rounded-xl" asChild>
+                                                                <button>Okay</button>
+                                                            </DialogClose>
+                                                        </DialogFooter>
+                                                    </DialogContent>
                                                 </Dialog>
                                             </div>
 

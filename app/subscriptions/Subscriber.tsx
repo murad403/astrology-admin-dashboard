@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { TSubscriber, TSubscriptionPlan } from "../types/subscription.types";
-import { useSubscriptionPlansQuery, useUpdateSubscriptionMutation } from "@/redux/features/subscription/subscriptionApi";
+import { useSubscriberListQuery, useSubscriptionPlansQuery, useUpdateSubscriptionMutation } from "@/redux/features/subscription/subscriptionApi";
 import { CiCalendar } from "react-icons/ci";
 import { toast } from "react-toastify";
 
@@ -18,19 +18,18 @@ type TSubscriberEdit = {
     start_date: string;
     end_date: string;
 }
-const Subscriber = ({ subscribers }: { subscribers: TSubscriber[] }) => {
-    const [updateSubscription, { isLoading }] = useUpdateSubscriptionMutation();
-    // console.log("updated data", data);
 
+const Subscriber = () => {
+    const { data, isLoading: isSubscriberLoading } = useSubscriberListQuery(undefined);
+    const [updateSubscription, { isLoading }] = useUpdateSubscriptionMutation();
 
     const [userId, setUserId] = useState<number>();
-    // console.log(userId)
     const { register, watch } = useForm<TSubscriberEdit>();
     const [currentPage, setCurrentPage] = useState(1);
-    const totalPages = Math.max(1, Math.ceil((subscribers?.length || 0) / 10));
+    const totalPages = Math.max(1, Math.ceil((data?.subscribers?.length || 0) / 10));
     const startIndex = (currentPage - 1) * 10;
     const endIndex = startIndex + 10;
-    const currentData = subscribers?.slice(startIndex, endIndex) || [];
+    const currentData = data?.subscribers?.slice(startIndex, endIndex) || [];
     const handlePageChange = (page: number) => {
         if (page >= 1 && page <= totalPages) {
             setCurrentPage(page);
@@ -71,8 +70,6 @@ const Subscriber = ({ subscribers }: { subscribers: TSubscriber[] }) => {
         return pages;
     };
     const { data: subscriptionPlans } = useSubscriptionPlansQuery(undefined);
-    // console.log(data);
-
 
     const handleEditSubscriber = async () => {
         const plan_id = Number(watch("plan_id"));
@@ -81,16 +78,20 @@ const Subscriber = ({ subscribers }: { subscribers: TSubscriber[] }) => {
         const updatedData = {
             plan_id, start_date, end_date
         }
-        // console.log(updatedData)
         try {
             const result = await updateSubscription({ updatedData, userId }).unwrap();
-            // console.log(result);
             toast(result?.message);
         } catch (error: any) {
             console.log(error);
         }
     }
 
+
+    if (isSubscriberLoading) {
+        return <div className="flex justify-center w-full mt-20">
+            <span className="loading loading-spinner text-header"></span>
+        </div>
+    }
 
     return (
         <div className='bg-common border border-border-color p-5 rounded-xl '>

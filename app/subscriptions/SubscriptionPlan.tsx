@@ -1,6 +1,16 @@
+"use client"
+import { useSubscriptionPlansQuery } from "@/redux/features/subscription/subscriptionApi";
 import { TSubscriptionPlan } from "../types/subscription.types";
 
-const SubscriptionPlan = ({subscriptionPlans}: {subscriptionPlans: TSubscriptionPlan[]}) => {
+const SubscriptionPlan = () => {
+    const { data: subscriptionPlans, isLoading } = useSubscriptionPlansQuery(undefined);
+    if (isLoading) {
+        return (
+            <div className="w-full border h-[170px] border-border-color rounded-xl p-5 bg-common flex items-center justify-center">
+                <span className="text-gray-400">Loading...</span>
+            </div>
+        );
+    }
     return (
         <div className='bg-common border border-border-color p-5 rounded-xl '>
             <h2 className='mb-5 font-bold text-2xl text-header'>Subscription Plans</h2>

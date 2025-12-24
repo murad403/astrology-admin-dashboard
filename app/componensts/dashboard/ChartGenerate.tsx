@@ -32,7 +32,7 @@ const chartConfig = {
 
 
 export function ChartGenerate() {
-    const { data } = useDashboardQuery(undefined);
+    const { data, isLoading } = useDashboardQuery(undefined);
     // console.log(data?.chart_generate);
 
     const chartData = [
@@ -40,6 +40,13 @@ export function ChartGenerate() {
         { browser: "Transit Chart", visitors: data?.chart_generate?.transit, fill: "#E300C5" },
         { browser: "Synastry Chart", visitors: data?.chart_generate?.synastry, fill: "#FFFFFF" }
     ]
+    if (isLoading) {
+        return (
+            <div className="w-full border h-[350px] border-border-color rounded-xl p-5 bg-common flex items-center justify-center">
+                <span className="text-gray-400">Loading...</span>
+            </div>
+        );
+    }
     return (
         <div className="h-[350px] bg-common p-5 border border-border-color rounded-xl">
             <Card className="flex flex-col bg-common border-none">

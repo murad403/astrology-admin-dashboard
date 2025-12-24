@@ -8,6 +8,13 @@ const UserStats = () => {
     const { data, isLoading } = useUserListQuery(undefined);
     const activeUser = data?.users?.filter((user: TUser) => user.is_active == true);
     // console.log(activeUser?.length);
+    if (isLoading) {
+        return (
+            <div className="w-full border h-[190px] border-border-color rounded-xl p-5 bg-common flex items-center justify-center">
+                <span className="text-gray-400">Loading...</span>
+            </div>
+        );
+    }
     return (
         <div className='flex justify-between items-center gap-5 *:border *:border-border-color'>
             <div className='rounded-xl p-5 bg-common w-1/2 space-y-8'>
@@ -16,7 +23,7 @@ const UserStats = () => {
                     <HiOutlineUserGroup />
                 </div>
                 <div>
-                <h2 className='font-medium text-3xl text-header'>{data?.count}</h2>
+                    <h2 className='font-medium text-3xl text-header'>{data?.count}</h2>
                     <p className='text-title font-medium text-[16px]'>+12% from last month</p>
                 </div>
             </div>
@@ -26,7 +33,7 @@ const UserStats = () => {
                     <HiOutlineUserGroup />
                 </div>
                 <div>
-                <h2 className='font-medium text-3xl text-header'>{activeUser?.length}</h2>
+                    <h2 className='font-medium text-3xl text-header'>{activeUser?.length}</h2>
                     <p className='text-title font-medium text-[16px]'>+12% from last month</p>
                 </div>
             </div>
