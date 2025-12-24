@@ -1,9 +1,9 @@
 import baseApi from "@/redux/api/api";
 
 const settingsApi = baseApi.injectEndpoints({
-    endpoints: (builder) =>({
+    endpoints: (builder) => ({
         adminChangePassword: builder.mutation({
-            query: (data) =>{
+            query: (data) => {
                 return {
                     url: "/change-password/",
                     method: "POST",
@@ -12,7 +12,7 @@ const settingsApi = baseApi.injectEndpoints({
             }
         }),
         getPrivacyPolicy: builder.query({
-            query: () =>{
+            query: () => {
                 return {
                     url: "/dashboard/privacy-policy/1/",
                     method: "GET"
@@ -21,7 +21,7 @@ const settingsApi = baseApi.injectEndpoints({
             providesTags: ["settings"]
         }),
         updatePrivacyPolicy: builder.mutation({
-            query: (data) =>{
+            query: (data) => {
                 return {
                     url: "/dashboard/privacy-policy/1/update/",
                     method: "PUT",
@@ -31,15 +31,17 @@ const settingsApi = baseApi.injectEndpoints({
             invalidatesTags: ["settings"]
         }),
         updateProfileInformation: builder.mutation({
-            query: (data) =>{
+            query: (data) => {
                 return {
-                    url: `/dashboard/subscribers/${data?.userId}/update/`,
+                    url: `/profile/`,
                     method: "PATCH",
-                    body: data?.updatedData
+                    body: data,
+                    formData: true
                 }
-            }
+            },
+            invalidatesTags: ["settings"]
         })
     })
 })
 
-export const {useAdminChangePasswordMutation, useGetPrivacyPolicyQuery, useUpdatePrivacyPolicyMutation, useUpdateProfileInformationMutation} = settingsApi;
+export const { useAdminChangePasswordMutation, useGetPrivacyPolicyQuery, useUpdatePrivacyPolicyMutation, useUpdateProfileInformationMutation } = settingsApi;

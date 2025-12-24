@@ -1,8 +1,6 @@
 "use client"
 import { useDashboardQuery } from "@/redux/features/dashboard/dashboardApi"
-import { useState, useMemo } from "react"
-
-type FilterType = "year" | "month" | "week"
+import { useMemo } from "react"
 
 interface DataPoint {
   label: string
@@ -15,8 +13,7 @@ interface ChartData {
 }
 
 const AreaChart = () => {
-  const [filter, setFilter] = useState<FilterType>("month");
-  const { data: apiData, isLoading } = useDashboardQuery(filter);
+  const { data: apiData, isLoading } = useDashboardQuery(undefined);
 
   // API data থেকে chart data generate করা
   const chartData: ChartData = useMemo(() => {
@@ -104,32 +101,9 @@ const AreaChart = () => {
 
   return (
     <div className="w-full border h-[350px] border-border-color rounded-xl p-5 bg-common">
-      {/* Header with Title and Filter */}
+      {/* Header with Title */}
       <div className="flex items-center justify-between mb-5">
         <h1 className="text-2xl font-semibold text-white">Earning Overview</h1>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-400">Sort by</span>
-          <div className="relative">
-            <select
-              value={filter}
-              onChange={(e) => setFilter(e.target.value as FilterType)}
-              className="appearance-none outline-none bg-slate-800 text-white px-4 py-1 rounded-md border border-slate-700 cursor-pointer pr-8 transition"
-            >
-              <option value="year">Years</option>
-              <option value="month">Months</option>
-              <option value="week">Weeks</option>
-            </select>
-            <div className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2">
-              <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Chart Container */}

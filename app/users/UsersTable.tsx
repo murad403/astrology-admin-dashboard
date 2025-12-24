@@ -89,7 +89,7 @@ const UsersTable = () => {
                             currentData?.map((user: TUser) =>
                                 <tr className="bg-[#1F2544] text-header" key={user?.id}>
                                     <td className="flex items-center gap-3">
-                                        <Image src={user?.profile_picture || profileImage} alt="user profile" width={48} height={48} className="rounded-full"></Image>
+                                        <Image src={user?.profile_picture || profileImage} alt="user profile" width={500} height={500} className="rounded-full size-12 object-cover"></Image>
                                         <div>
                                             <h3 className="font-semibold text-[16px]">{user?.name}</h3>
                                             <p className="text-title font-medium text-sm">{user?.email}</p>

@@ -10,6 +10,7 @@ import { TbCameraPlus } from 'react-icons/tb';
 import AdminHeader from '@/app/componensts/shared/AdminHeader';
 import { useProfileQuery } from '@/redux/features/auth/authApi'
 import { useUpdateProfileInformationMutation } from '@/redux/features/setting/settingApi'
+import { toast } from 'react-toastify'
 
 type TInputs = {
     name: string;
@@ -20,27 +21,28 @@ type TInputs = {
 
 const PersonalInformation = () => {
     const [isEdit, setIsEdit] = useState<boolean>(false);
-    const {data} = useProfileQuery(undefined);
-    const { register, handleSubmit, watch  } = useForm<TInputs>();
-    const [updateProfileInformation, {isLoading}] = useUpdateProfileInformationMutation();
-    
-    // const profile_picture = watch('profile_picture')?.[0];
-    // console.log(data?.id)
-    
-    const onSubmit: SubmitHandler<TInputs> = async() => {
+    const { data } = useProfileQuery(undefined);
+    const { register, handleSubmit, watch } = useForm<TInputs>();
+    const [updateProfileInformation, { isLoading }] = useUpdateProfileInformationMutation();
+    // console.log(data?.profile?.profile_picture_url)
+
+
+    const onSubmit: SubmitHandler<TInputs> = async () => {
         const name = watch("name");
         const profile_picture = watch("profile_picture")?.[0];
-        const updatedData = {
-            name, profile: {
-                profile_picture
-            }
+
+        const formData = new FormData();
+        formData.append("name", name);
+        if (profile_picture) {
+            formData.append("profile_picture", profile_picture);
         }
 
         try {
-            const result = await updateProfileInformation({userId: data?.id, updatedData}).unwrap();
-            console.log(result);
+            const result = await updateProfileInformation(formData).unwrap();
+            toast(result?.message);
+            // console.log(result);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
     return (
@@ -56,7 +58,7 @@ const PersonalInformation = () => {
             <div className='flex gap-10 items-center'>
                 <div className='w-1/3 h-[360px] rounded-xl bg-common border border-border-color flex items-center flex-col gap-4 justify-center'>
                     <div className='relative'>
-                        <Image src={profileImage} alt='profile image' width={140} height={140} className='rounded-full'></Image>
+                        <Image src={data?.profile?.profile_picture_url || profileImage} alt='profile image' width={500} height={500} className='rounded-full size-[140px]'></Image>
                         <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${isEdit ? "block" : "hidden"}`}>
                             <label htmlFor="photo" className='text-header text-2xl'>
                                 <TbCameraPlus />

@@ -19,7 +19,7 @@ const authApi = baseApi.injectEndpoints({
                     method: "GET",
                 }
             },
-            providesTags: ["auth"]
+            providesTags: ["auth", "settings"]
         }),
         verifyEmail: builder.mutation({
             query: (data) =>{

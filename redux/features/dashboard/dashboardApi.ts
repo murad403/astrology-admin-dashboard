@@ -6,7 +6,7 @@ const dashboardApi = baseApi.injectEndpoints({
             query: (filter) =>{
                 // console.log(filter);
                 return {
-                    url: `/dashboard/stats/?period=${filter}`,
+                    url: `/dashboard/stats/`,
                     method: "GET"
                 }
             }

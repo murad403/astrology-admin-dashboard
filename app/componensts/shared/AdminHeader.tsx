@@ -18,7 +18,7 @@ const AdminHeader = ({title, description}: TProps) => {
         <p className='text-[16px] font-medium text-title'>{description}</p>
       </div>
       <div className="flex items-center gap-5">
-        <Image src={data?.profile?.profile_picture || admin} alt="admin image" width={60} height={60} className="rounded-full"></Image>
+        <Image src={data?.profile?.profile_picture_url || admin} alt="admin image" width={500} height={500} className="rounded-full size-[60px]"></Image>
         <div>
             <h3 className='font-semibold text-xl text-header capitalize'>{data?.name}</h3>
             <p className='font-medium text-title text-[16px] capitalize'>admin</p>
