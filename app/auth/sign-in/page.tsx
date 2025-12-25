@@ -50,12 +50,12 @@ const SignIn = () => {
         <div className="flex justify-center items-center">
             <div className="w-[540px] h-[624px] bg-common p-7 rounded-xl flex flex-col justify-between items-center">
                 {/* logo */}
-                <div className="size-[150px] rounded-full bg-gray-300 flex items-center justify-center">
+                <div className="size-[150px] rounded-full flex items-center justify-center">
                     <Image 
                         src="/logo.png" 
                         alt="logo" 
-                        width={150} 
-                        height={150} 
+                        width={500} 
+                        height={500} 
                         className="rounded-full object-cover"
                         priority
                     />

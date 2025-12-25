@@ -24,7 +24,8 @@ const ForgetPassword = () => {
       dispatch(setUser(result?.email))
       router.push("/auth/verify-otp");
     } catch (error: any) {
-      toast(error?.details?.email);
+      console.log(error)
+      toast(error?.data?.details?.email?.[0]);
     }
     // router.push('/auth/verify-otp');
   }

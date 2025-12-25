@@ -92,7 +92,7 @@ const VerifyOtp = () => {
     return (
         <div className="flex justify-center items-center min-h-screen">
             <div className="w-[540px] bg-common p-7 rounded-xl flex flex-col justify-between items-center text-white">
-                <Image src={logo} alt="logo" width={150} height={150} className="mb-6" />
+                <Image src={logo} alt="logo" width={500} height={500} className="mb-6 size-[150px]" />
 
                 <div className='flex w-full items-center mb-6'>
                     <BackButton text='Verify OTP' />
