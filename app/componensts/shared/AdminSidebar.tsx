@@ -1,19 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem
-} from "@/components/ui/sidebar"
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem} from "@/components/ui/sidebar"
 import Image from "next/image"
 import logo from '../../../public/logo.png'
+import logo2 from '../../../public/logo2.png'
 import adminSidebarItems from "@/app/libs/AdminSidebar"
 import { usePathname, useRouter } from "next/navigation"
 import { LogOut } from "lucide-react"
@@ -43,14 +33,15 @@ const AdminSidebar = () => {
   }
 
   return (
-    <Sidebar className="w-[300px] p-10 bg-common">
-      <SidebarHeader className="flex flex-col items-center justify-center py-4 bg-common">
-        <Image src={logo} alt="logo" width={60} height={60} className="rounded-full"></Image>
-        <SidebarGroupLabel className="mt-2 text-[16px] text-[#FA7B34] font-semibold text-center">
-          Universal Astrology
-        </SidebarGroupLabel>
+    <Sidebar className="w-[300px] bg-common py-10">
+      <SidebarHeader className="flex flex-col items-center justify-center bg-common">
+        <Image src={logo} alt="logo" width={500} height={500} className="rounded-full size-[250px]"></Image>
+        <Image src={logo2} alt="logo" width={500} height={500} className="mb-6 px-5"></Image>
+        {/* <SidebarGroupLabel className="mb-7 text-[24px] text-header font-semibold text-center">
+          Universal Astro
+        </SidebarGroupLabel> */}
       </SidebarHeader>
-      <SidebarContent className="bg-common text-white">
+      <SidebarContent className="bg-common text-white px-10">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
