@@ -24,7 +24,7 @@ const Wrapper = ({ children }: TProps) => {
             isShowSidebar ? null : <AdminSidebar></AdminSidebar>
           }
         </div>
-        <div className='p-8 w-full space-y-5'>
+        <div className='py-8 w-full space-y-5'>
           {children}
         </div>
         <ToastContainer autoClose={2000}/>
