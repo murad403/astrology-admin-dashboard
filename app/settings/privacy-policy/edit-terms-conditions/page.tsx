@@ -21,6 +21,7 @@ const EditTermsConditions = () => {
     const router = useRouter()
 
     const editorContent = watch("privacy_policy") || data?.privacy_policy || ""
+    // console.log(editorContent);
 
     const onSubmit: SubmitHandler<TInput> = async (inputData) => {
         try {

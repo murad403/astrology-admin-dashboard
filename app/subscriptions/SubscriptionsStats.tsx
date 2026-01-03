@@ -6,7 +6,7 @@ import { useSubscriptionStatsQuery } from '@/redux/features/subscription/subscri
 
 const SubscriptionsStats = () => {
     const { data: subscriptionStats, isLoading } = useSubscriptionStatsQuery(undefined);
-    console.log(subscriptionStats?.stats)
+    // console.log(subscriptionStats?.stats)
     if (isLoading) {
         return (
             <div className="w-full border h-[170px] border-border-color rounded-xl p-5 bg-common flex items-center justify-center">
